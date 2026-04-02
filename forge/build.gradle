@@ -114,8 +114,8 @@ dependencies {
     compileOnly("org.joml:joml:1.10.4")
     compileOnly("org.joml:joml-primitives:1.10.0")
 
-    // Add Kotlin for Forge.
-    implementation 'thedarkcolour:kotlinforforge:4.11.0'
+    // Add Kotlin for Forge (bundled via JIJ so no external install needed).
+    include(implementation('thedarkcolour:kotlinforforge:4.11.0'))
 
     // CC Tweaked
     modCompileOnly("cc.tweaked:cc-tweaked-$minecraft_version-core-api:$cc_version")

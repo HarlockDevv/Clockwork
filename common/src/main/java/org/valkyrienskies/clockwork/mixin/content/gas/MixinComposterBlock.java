@@ -50,7 +50,7 @@ public class MixinComposterBlock extends Block implements INodeBlock, IHaveDuctS
         super(properties);
     }
 
-    @WrapMethod(method = "tick", remap = false)
+    @WrapMethod(method = "m_213897_", remap = false)
     public void vs_clockwork$$tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random, Operation<Void> original) {
         if (state.getValue(ComposterBlock.LEVEL) == 7) {
             DuctNetwork kelvin = ClockworkMod.getKelvin();

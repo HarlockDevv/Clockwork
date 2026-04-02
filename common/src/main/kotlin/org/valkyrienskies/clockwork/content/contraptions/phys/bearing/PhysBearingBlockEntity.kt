@@ -229,9 +229,12 @@ class PhysBearingBlockEntity(type: BlockEntityType<*>?, pos: BlockPos?, state: B
     }
 
     // VS2 removed: assemble/disassemble require VS2 ship assembly (VSAssemblyEvents, assembleToShip, joints, etc.)
-    override fun assemble() {}
-    override fun disassemble() {}
+    fun assemble() {}
+    fun disassemble() {}
     override fun destroy() {}
+
+    // VS2 removed: actual angle requires VS2 ship transform lookup
+    fun getActualAngle(): Double? = null
 
     override fun attach(contraption: ControlledContraptionEntity) {}
     override fun onStall() { if (!level!!.isClientSide) sendData() }

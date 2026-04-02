@@ -5,8 +5,6 @@ import com.simibubi.create.content.contraptions.bearing.BearingBlock
 import com.simibubi.create.foundation.block.IBE
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
-import net.minecraft.nbt.CompoundTag
-import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResult
 import net.minecraft.world.entity.player.Player
@@ -15,43 +13,18 @@ import net.minecraft.world.level.BlockGetter
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.LevelReader
 import net.minecraft.world.level.block.Block
-import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.entity.BlockEntityType
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.phys.BlockHitResult
 import net.minecraft.world.phys.shapes.CollisionContext
 import net.minecraft.world.phys.shapes.VoxelShape
-import org.joml.Vector3d
-import org.joml.Vector3dc
 import org.valkyrienskies.clockwork.ClockworkBlockEntities
 import org.valkyrienskies.clockwork.ClockworkConfig
-import org.valkyrienskies.clockwork.util.ClockworkConstants
-import org.valkyrienskies.clockwork.util.ClockworkUtils.getVector3d
-import org.valkyrienskies.core.api.ships.ServerShip
-import org.valkyrienskies.mod.common.assembly.ICopyableBlock
-import org.valkyrienskies.mod.util.putVector3d
 import java.util.function.Consumer
 
-class PhysBearingBlock(properties: Properties) : BearingBlock(properties), IBE<PhysBearingBlockEntity>, ICopyableBlock {
-    override fun onCopy(level: ServerLevel, pos: BlockPos, state: BlockState, be: BlockEntity?, shipsBeingCopied: List<ServerShip>, centerPositions: Map<Long, Vector3dc>): CompoundTag? = null
-    override fun onPaste(
-        level: ServerLevel,
-        pos: BlockPos,
-        state: BlockState,
-        oldShipIdToNewId: Map<Long, Long>,
-        centerPositions: Map<Long, Pair<Vector3dc, Vector3dc>>,
-        tag: CompoundTag?
-    ): CompoundTag? {
-        val tag = tag ?: return null
-
-        if (!tag.contains(ClockworkConstants.Nbt.SHIPTRAPTION_ID)) return tag
-        val oldShiptraptionCenter = tag.getVector3d(ClockworkConstants.Nbt.NEW_SHIPTRAPTION_CENTER) ?: return tag
-        val oldId = tag.getLong(ClockworkConstants.Nbt.SHIPTRAPTION_ID)
-        tag.putLong(ClockworkConstants.Nbt.SHIPTRAPTION_ID, oldShipIdToNewId[oldId] ?: -1)
-        val (oldCenter, newCenter) = centerPositions[oldId] ?: (Vector3d() to Vector3d())
-        tag.putVector3d(ClockworkConstants.Nbt.NEW_SHIPTRAPTION_CENTER, oldShiptraptionCenter.sub(oldCenter).add(newCenter))
-        return tag
-    }
+class PhysBearingBlock(properties: Properties) : BearingBlock(properties), IBE<PhysBearingBlockEntity> {
+    // VS2 removed: ICopyableBlock (org.valkyrienskies.mod.common.assembly) interface and
+    // onCopy/onPaste methods removed — ship copy/paste requires VS2 assembly runtime.
 
     override fun use(state: BlockState, worldIn: Level, pos: BlockPos, player: Player, handIn: InteractionHand, hit: BlockHitResult): InteractionResult {
         if (!player.mayBuild()) return InteractionResult.FAIL

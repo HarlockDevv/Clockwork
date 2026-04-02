@@ -60,10 +60,9 @@ class SugarRocketBlock(properties: Properties) : DirectionalBlock(properties), I
         movedByPiston: Boolean
     ) {
         if (level.isClientSide) return super.onRemove(state, level, pos, newState, movedByPiston)
-        val ship = (level as ServerLevel).getLoadedShipManagingPos(pos)
-        if (ship != null) {
-            SugarRocketController.getOrCreate(ship).removeRocket(pos)
-        }
+        // VS2 removed: SugarRocketController.getOrCreate requires VS2 LoadedServerShip attachment API
+        // val ship = (level as ServerLevel).getLoadedShipManagingPos(pos)
+        // if (ship != null) { SugarRocketController.getOrCreate(ship).removeRocket(pos) }
         super.onRemove(state, level, pos, newState, movedByPiston)
     }
 

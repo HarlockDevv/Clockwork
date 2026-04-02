@@ -11,8 +11,6 @@ import org.joml.Math.toDegrees
 import org.valkyrienskies.clockwork.ClockworkLang
 import org.valkyrienskies.clockwork.content.curiosities.altmeter.AltMeterBlockEntity
 import org.valkyrienskies.clockwork.platform.api.ContraptionController
-import org.valkyrienskies.mod.api.toJOML
-import org.valkyrienskies.mod.common.getLoadedShipManagingPos
 import kotlin.math.round
 import kotlin.math.roundToInt
 

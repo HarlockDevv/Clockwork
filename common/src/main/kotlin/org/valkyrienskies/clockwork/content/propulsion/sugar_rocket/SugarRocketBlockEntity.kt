@@ -111,10 +111,9 @@ class SugarRocketBlockEntity(type: BlockEntityType<*>?, pos: BlockPos?,
         val realWorldPosition = level.toWorldCoordinates(worldPosition).add(0.5, 0.5, 0.5)
         serverLevel.playSound(null, realWorldPosition.x, realWorldPosition.y, realWorldPosition.z, SoundEvents.FIREWORK_ROCKET_LAUNCH, SoundSource.BLOCKS, 1.0f, 0.05f)
 
-        val ship = serverLevel.getShipObjectManagingPos(worldPosition)
-        if (ship != null) {
-            SugarRocketController.getOrCreate(ship).addRocket(worldPosition, burnPower.toDouble() * ClockworkConfig.SERVER.sugarRocketBlockThrust, blockState.getValue(DirectionalBlock.FACING))
-        }
+        // VS2 removed: SugarRocketController.getOrCreate requires VS2 LoadedServerShip attachment API
+        // val ship = serverLevel.getShipObjectManagingPos(worldPosition)
+        // if (ship != null) { SugarRocketController.getOrCreate(ship).addRocket(...) }
         sendData()
     }
 
@@ -131,9 +130,8 @@ class SugarRocketBlockEntity(type: BlockEntityType<*>?, pos: BlockPos?,
             if (nextBlock is SugarRocketBlockEntity && !nextBlock.isBurning) {
                 nextBlock.ignite(burnTime, burnPower)
             }
-            if (ship != null) {
-                SugarRocketController.getOrCreate(ship).removeRocket(worldPosition)
-            }
+            // VS2 removed: SugarRocketController.getOrCreate requires VS2 LoadedServerShip attachment API
+            // if (ship != null) { SugarRocketController.getOrCreate(ship).removeRocket(worldPosition) }
             level!!.destroyBlock(worldPosition, false)
         }
         sendData()
