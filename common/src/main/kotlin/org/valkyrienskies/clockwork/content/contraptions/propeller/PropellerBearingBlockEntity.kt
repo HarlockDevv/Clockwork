@@ -46,9 +46,8 @@ import org.valkyrienskies.clockwork.content.contraptions.propeller.data.PropUpda
 import org.valkyrienskies.clockwork.content.forces.PropellerController
 import org.valkyrienskies.clockwork.content.generic.IForceApplierBE
 import org.valkyrienskies.clockwork.util.sound.PropellerSoundInstance
-import org.valkyrienskies.mod.common.getShipObjectManagingPos
-import org.valkyrienskies.mod.common.util.toJOML
-import org.valkyrienskies.mod.common.util.toJOMLD
+import org.valkyrienskies.clockwork.util.toJOML
+import org.valkyrienskies.clockwork.util.toJOMLD
 import kotlin.math.abs
 import kotlin.math.absoluteValue
 import kotlin.math.min
@@ -256,12 +255,7 @@ open class PropellerBearingBlockEntity(type: BlockEntityType<*>, pos: BlockPos, 
             }
         }
 
-        if (!level!!.isClientSide && level!!.getShipObjectManagingPos(blockPos) != null) {
-            val shipOn = (level as ServerLevel).getShipObjectManagingPos(blockPos)!!
-            val attachment = PropellerController.getOrCreate(shipOn)!!
-            getBlades()
-            tickData(attachment, true)
-        }
+        // VS2 removed: propeller force on ships requires Valkyrien Skies 2
 
         if (propellerContraption != null && running) {
             var angularSpeed = getAngularSpeed().toFloat()
@@ -319,7 +313,8 @@ open class PropellerBearingBlockEntity(type: BlockEntityType<*>, pos: BlockPos, 
     }
 
     override fun tickData(attachment: PropellerController, shouldUpdate: Boolean) {
-        if (running && propellerContraption != null) super.tickData(attachment, shouldUpdate) else removeApplier(PropellerController::class.java, level, worldPosition)
+        if (running && propellerContraption != null) super.tickData(attachment, shouldUpdate)
+        // VS2 removed: removeApplier requires Valkyrien Skies 2
     }
 
     open fun assemble() {
@@ -362,14 +357,7 @@ open class PropellerBearingBlockEntity(type: BlockEntityType<*>, pos: BlockPos, 
         val stressImpact = calculateStressApplied()
         orCreateNetwork?.updateStressFor(this, stressImpact)
 
-        if (!level!!.isClientSide) {
-            val ship = (level as ServerLevel).getShipObjectManagingPos(
-                blockPos
-            )
-            if (ship != null) {
-                tickData(PropellerController.getOrCreate(ship)!!, true)
-            }
-        }
+        // VS2 removed: propeller force on ships requires Valkyrien Skies 2
         sendData()
     }
 
@@ -393,9 +381,7 @@ open class PropellerBearingBlockEntity(type: BlockEntityType<*>, pos: BlockPos, 
         }
         propellerContraption = null
         running = false
-        if (physID != -1) {
-            removeApplier(PropellerController::class.java, level, worldPosition)
-        }
+        // VS2 removed: removeApplier requires Valkyrien Skies 2
 
         // Remove stress impact
         val stressImpact = calculateStressApplied()

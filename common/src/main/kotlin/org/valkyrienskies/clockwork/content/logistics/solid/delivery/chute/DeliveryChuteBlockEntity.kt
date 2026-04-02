@@ -26,7 +26,7 @@ import org.valkyrienskies.clockwork.util.ClockworkUtils
 import org.valkyrienskies.mod.api.positionToWorld
 import org.valkyrienskies.mod.api.vsApi
 import org.valkyrienskies.mod.common.getShipObjectManagingPos
-import org.valkyrienskies.mod.common.util.toJOMLD
+import org.valkyrienskies.clockwork.util.toJOMLD
 
 class DeliveryChuteBlockEntity(typeIn: BlockEntityType<*>?, pos: BlockPos, state: BlockState) :
     SmartBlockEntity(typeIn, pos, state) {

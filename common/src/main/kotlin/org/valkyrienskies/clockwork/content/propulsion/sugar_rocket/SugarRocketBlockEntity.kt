@@ -18,7 +18,7 @@ import org.valkyrienskies.clockwork.ClockworkConfig
 import org.valkyrienskies.clockwork.content.forces.SugarRocketController
 import org.valkyrienskies.mod.common.getShipObjectManagingPos
 import org.valkyrienskies.mod.common.toWorldCoordinates
-import org.valkyrienskies.mod.common.util.toJOMLD
+import org.valkyrienskies.clockwork.util.toJOMLD
 import java.util.Random
 
 class SugarRocketBlockEntity(type: BlockEntityType<*>?, pos: BlockPos?,

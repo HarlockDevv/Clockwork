@@ -18,23 +18,17 @@ import org.valkyrienskies.clockwork.ClockworkModClient
 import org.valkyrienskies.clockwork.mixinduck.MixinAirCurrentDuck
 import org.valkyrienskies.clockwork.util.kelvin.KNodeBlockEntity
 import org.valkyrienskies.clockwork.util.kelvin.KelvinParticleHelper
-import org.valkyrienskies.core.api.ships.PhysShip
-import org.valkyrienskies.core.api.world.PhysLevel
-import org.valkyrienskies.core.api.world.properties.DimensionId
 import org.valkyrienskies.kelvin.KelvinMod
-import org.valkyrienskies.mod.api.BlockEntityPhysicsListener
-import org.valkyrienskies.mod.common.util.toJOMLD
+import org.valkyrienskies.clockwork.util.toJOMLD
 import kotlin.math.floor
 import kotlin.math.min
 import kotlin.math.pow
 
 class ExhaustBlockEntity(type: BlockEntityType<*>, pos: BlockPos, state: BlockState) : KNodeBlockEntity(type, pos, state),
-    IAirCurrentSource, BlockEntityPhysicsListener {
+    IAirCurrentSource {
     val MASS_PER_EXHAUST = 0.001
 
     val facing: Direction = state.getValue(BlockStateProperties.FACING)
-
-    override lateinit var dimension: DimensionId
     // Airflow speed parameters cannot be easily made configurable because air current code runs both on server and client
     // so values need to somehow be synced.
     val MAX_AIRFLOW_SPEED = 256F // like a maxed out encased fan with default max rpm cap
@@ -168,10 +162,5 @@ class ExhaustBlockEntity(type: BlockEntityType<*>, pos: BlockPos, state: BlockSt
         return remove
     }
 
-    override fun physTick(
-        physShip: PhysShip?,
-        physLevel: PhysLevel
-    ) {
-        // will implement later
-    }
+    // VS2 removed: physTick requires VS2 BlockEntityPhysicsListener
 }

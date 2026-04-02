@@ -12,7 +12,7 @@ import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.phys.Vec3
 import org.valkyrienskies.mod.common.getShipManagingPos
-import org.valkyrienskies.mod.common.util.toJOML
+import org.valkyrienskies.clockwork.util.toJOML
 import org.valkyrienskies.mod.common.util.toMinecraft
 
 class FrequencySlotBehaviour(be: SmartBlockEntity?, val slot: ValueBoxTransform) : BlockEntityBehaviour(be), ClipboardCloneable  {

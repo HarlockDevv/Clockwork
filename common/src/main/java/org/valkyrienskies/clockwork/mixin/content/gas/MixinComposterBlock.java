@@ -33,7 +33,6 @@ import org.valkyrienskies.kelvin.api.nodes.PipeDuctNode;
 import org.valkyrienskies.kelvin.impl.registry.GasTypeRegistry;
 import org.valkyrienskies.kelvin.util.INodeBlock;
 import org.valkyrienskies.kelvin.util.KelvinExtensions;
-import org.valkyrienskies.mod.common.VSGameUtilsKt;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -55,7 +54,7 @@ public class MixinComposterBlock extends Block implements INodeBlock, IHaveDuctS
     public void vs_clockwork$$tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random, Operation<Void> original) {
         if (state.getValue(ComposterBlock.LEVEL) == 7) {
             DuctNetwork kelvin = ClockworkMod.getKelvin();
-            ResourceLocation location =  VSGameUtilsKt.getResourceKey(VSGameUtilsKt.getDimensionId(level)).location();
+            ResourceLocation location = level.dimension().location();
             DuctNodePos ductNodePos = new DuctNodePos(pos.getX(), pos.getY(), pos.getZ(), location);
 
             double pressure = kelvin.getPressureAt(ductNodePos);

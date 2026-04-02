@@ -15,7 +15,6 @@ import org.valkyrienskies.clockwork.content.physicalities.IClockworkWheelBE
 import org.valkyrienskies.clockwork.content.physicalities.reactionwheel.data.ReactionWheelCreateData
 import org.valkyrienskies.clockwork.content.physicalities.reactionwheel.data.ReactionWheelData
 import org.valkyrienskies.clockwork.content.physicalities.reactionwheel.data.ReactionWheelUpdateData
-import org.valkyrienskies.mod.common.getShipObjectManagingPos
 
 class ReactionWheelBlockEntity(typeIn: BlockEntityType<*>, pos: BlockPos, state: BlockState) : KineticBlockEntity(typeIn, pos,
     state
@@ -90,24 +89,7 @@ class ReactionWheelBlockEntity(typeIn: BlockEntityType<*>, pos: BlockPos, state:
 
         }
 
-        val isOnShip = (level!! as ServerLevel).getShipObjectManagingPos(worldPosition) != null
-
-        if (isOnShip) {
-            val ship = (level!! as ServerLevel).getShipObjectManagingPos(worldPosition)!!
-            val attachment = ReactionWheelController.getOrCreate(ship)!!
-
-            tickData(attachment, true)
-        }
-    }
-
-    override fun remove() {
-        removeApplier(ReactionWheelController::class.java, level, worldPosition)
-        super.remove()
-    }
-
-    override fun destroy() {
-        removeApplier(ReactionWheelController::class.java, level, worldPosition)
-        super.destroy()
+        // VS2 removed: ship reaction wheel force requires Valkyrien Skies 2
     }
 
 }

@@ -78,23 +78,24 @@ dependencies {
 
     modRuntimeOnly("maven.modrinth:forge-config-screens:v8.0.2-1.20.1-Forge")
 
-    //VS2
-    modApi("org.valkyrienskies:valkyrienskies-120-forge:${rootProject.vs2_version}") { transitive = false
+    //VS2 - compileOnly: no longer a runtime dependency
+    modCompileOnly("org.valkyrienskies:valkyrienskies-120-forge:${rootProject.vs2_version}") { transitive = false
         exclude group: 'org.valkyrienskies.core', module: ''
     }
-    implementation("org.valkyrienskies.core:api:${rootProject.vscore_version}") { transitive = false
+    compileOnly("org.valkyrienskies.core:api:${rootProject.vscore_version}") { transitive = false
         exclude group: 'org.joml', module: ''
     }
-    implementation("org.valkyrienskies.core:util:${rootProject.vscore_version}") { transitive = false
+    compileOnly("org.valkyrienskies.core:util:${rootProject.vscore_version}") { transitive = false
         exclude group: 'org.joml', module: ''
     }
-    implementation("org.valkyrienskies.core:internal:${rootProject.vscore_version}") { transitive = false
+    compileOnly("org.valkyrienskies.core:internal:${rootProject.vscore_version}") { transitive = false
         exclude group: 'org.joml', module: ''
     }
 
     // JEI for testing
     modRuntimeOnly("maven.modrinth:jei:MdKE2PdF")
 
+    // Kelvin (standalone mod, no VS2 dependency)
     include(modImplementation("org.valkyrienskies.kelvin:kelvin-forge:${rootProject.minecraft_version}-${rootProject.kelvin_version}") { transitive = false
         exclude group: 'org.joml', module: ''
     })
@@ -138,7 +139,7 @@ processResources {
             "minecraft_version", minecraft_version,
             "create_version", create_forge_version.split("-")[0] // cut off build number
     )
-    properties.forEach((k, v) -> inputs.property(k, v))
+    properties.forEach { k, v -> inputs.property(k, v) }
 
     filesMatching("META-INF/mods.toml") {
         expand properties

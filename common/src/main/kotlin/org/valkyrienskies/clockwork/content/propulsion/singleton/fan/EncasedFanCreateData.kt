@@ -6,8 +6,8 @@ import org.joml.Vector3dc
 import org.joml.Vector3ic
 import org.valkyrienskies.clockwork.content.forces.data.ForceApplierCreateData
 import org.valkyrienskies.clockwork.content.generic.IForceApplierBE
-import org.valkyrienskies.mod.common.util.toJOML
-import org.valkyrienskies.mod.common.util.toJOMLD
+import org.valkyrienskies.clockwork.util.toJOML
+import org.valkyrienskies.clockwork.util.toJOMLD
 
 data class EncasedFanCreateData(override val position: Vector3ic, val fanDir: Vector3dc, val fanSpeed: Double): ForceApplierCreateData<EncasedFanData> {
     override fun fromCreateData(): EncasedFanData {

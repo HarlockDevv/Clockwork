@@ -10,10 +10,10 @@ import org.joml.Vector3i
 import org.valkyrienskies.clockwork.ClockworkConfig
 import org.valkyrienskies.clockwork.util.Vector3icKeyDeserializer
 import org.valkyrienskies.clockwork.util.Vector3icKeySerializer
-import org.valkyrienskies.core.api.ships.*
+import org.valkyrienskies.core.api.ships.PhysShip
 import org.valkyrienskies.core.api.world.PhysLevel
-import org.valkyrienskies.mod.common.util.toBlockPos
-import org.valkyrienskies.mod.common.util.toJOML
+import org.valkyrienskies.clockwork.util.toBlockPos
+import org.valkyrienskies.clockwork.util.toJOML
 import java.util.concurrent.ConcurrentHashMap
 
 @JsonAutoDetect(
@@ -23,13 +23,14 @@ import java.util.concurrent.ConcurrentHashMap
     setterVisibility = JsonAutoDetect.Visibility.NONE
 )
 @JsonIgnoreProperties(ignoreUnknown = true)
-class WanderShipControl : ShipPhysicsListener {
+// VS2 removed: ShipPhysicsListener requires VS2
+class WanderShipControl {
 
     @JsonSerialize(keyUsing = Vector3icKeySerializer::class)
     @JsonDeserialize(keyUsing = Vector3icKeyDeserializer::class)
     val wanderBlocks: ConcurrentHashMap<Vector3i, Double> = ConcurrentHashMap()
 
-    override fun physTick(physShip: PhysShip, physLevel: PhysLevel) {
+    fun physTick(physShip: PhysShip, physLevel: PhysLevel) {
         val meanPos = Vector3d()
         for (vector3i in wanderBlocks.keys) {
             // I don't like adding magic +0.5 numbers, so I'm going to do these conversion shenanigans instead
@@ -57,12 +58,6 @@ class WanderShipControl : ShipPhysicsListener {
     }
 
     companion object {
-
-        fun getOrCreate(ship: LoadedServerShip): WanderShipControl {
-            if (ship.getAttachment(WanderShipControl::class.java) == null) {
-                ship.setAttachment(WanderShipControl())
-            }
-            return ship.getAttachment(WanderShipControl::class.java)!!
-        }
+        // VS2 removed: getOrCreate requires VS2 LoadedServerShip attachment API
     }
 }

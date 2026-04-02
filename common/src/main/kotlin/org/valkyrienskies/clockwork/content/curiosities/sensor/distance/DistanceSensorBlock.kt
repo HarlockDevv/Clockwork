@@ -30,7 +30,7 @@ import org.valkyrienskies.clockwork.content.curiosities.sensor.ISensorBlock.Comp
 import org.valkyrienskies.mod.common.getShipObjectManagingPos
 import org.valkyrienskies.mod.common.toWorldCoordinates
 import org.valkyrienskies.mod.common.util.toDoubles
-import org.valkyrienskies.mod.common.util.toJOML
+import org.valkyrienskies.clockwork.util.toJOML
 import org.valkyrienskies.mod.common.util.toMinecraft
 import org.valkyrienskies.mod.common.world.clipIncludeShips
 import java.util.*

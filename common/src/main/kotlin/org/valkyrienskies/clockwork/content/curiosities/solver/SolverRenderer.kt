@@ -16,7 +16,7 @@ import org.valkyrienskies.core.api.ships.ClientShip
 import org.valkyrienskies.mod.common.getLoadedShipManagingPos
 import org.valkyrienskies.mod.common.util.toDoubles
 import org.valkyrienskies.mod.common.util.toFloat
-import org.valkyrienskies.mod.common.util.toJOML
+import org.valkyrienskies.clockwork.util.toJOML
 import org.valkyrienskies.mod.common.util.toMinecraft
 
 class SolverRenderer(context: BlockEntityRendererProvider.Context) : SmartBlockEntityRenderer<SolverBlockEntity>(

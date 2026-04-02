@@ -12,7 +12,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.valkyrienskies.clockwork.util.BlockUpdateCollector;
-import org.valkyrienskies.mod.common.BlockStateInfoProvider;
 
 @Mixin(LevelChunk.class)
 public class MixinBlockStateInfoProvider {

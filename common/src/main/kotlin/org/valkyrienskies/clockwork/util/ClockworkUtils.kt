@@ -17,35 +17,14 @@ import org.joml.Vector3i
 import org.joml.Vector3ic
 import org.joml.primitives.AABBi
 import org.joml.primitives.AABBic
-import org.valkyrienskies.clockwork.ClockworkAugmentations
 import org.valkyrienskies.clockwork.ClockworkMod
 import org.valkyrienskies.clockwork.content.curiosities.tools.wanderwand.SelectedAreaToolkit
-import org.valkyrienskies.clockwork.content.forces.WanderShipControl
-import org.valkyrienskies.clockwork.util.MathFunctions.chunkPos
-import org.valkyrienskies.clockwork.util.MathFunctions.toVector3i
-import org.valkyrienskies.core.api.attachment.getAttachment
-import org.valkyrienskies.core.api.ships.ServerShip
-import org.valkyrienskies.core.api.ships.properties.ChunkClaim
-import org.valkyrienskies.core.api.world.connectivity.DoubleComponentAugmentation
 import org.valkyrienskies.core.impl.util.serialization.VSJacksonUtil.defaultMapper
-import org.valkyrienskies.core.util.datastructures.DenseBlockPosSet
 import org.valkyrienskies.kelvin.api.DuctNodePos
 import org.valkyrienskies.kelvin.api.GasType
 import org.valkyrienskies.kelvin.impl.registry.GasTypeRegistry
-import org.valkyrienskies.kelvin.util.INodeBlock
 import org.valkyrienskies.kelvin.util.INodeBlockEntity
-import org.valkyrienskies.mod.api.positionToWorld
-import org.valkyrienskies.mod.api.toBlockPos
-import org.valkyrienskies.mod.api.toJOML
-import org.valkyrienskies.mod.api.vsApi
-import org.valkyrienskies.mod.common.BlockStateInfo
-import org.valkyrienskies.mod.common.config.MassDatapackResolver
-import org.valkyrienskies.mod.common.dimensionId
-import org.valkyrienskies.mod.common.getLoadedShipManagingPos
-import org.valkyrienskies.mod.common.getShipObjectManagingPos
-import org.valkyrienskies.mod.common.shipObjectWorld
-import org.valkyrienskies.mod.common.toWorldCoordinates
-import org.valkyrienskies.mod.common.util.toJOMLD
+import org.valkyrienskies.clockwork.util.toJOMLD
 import java.io.IOException
 import java.util.*
 import java.util.stream.Collectors
@@ -54,20 +33,12 @@ import kotlin.collections.HashMap
 
 object ClockworkUtils {
 
-    val wanderliteNodesToAdd: HashMap<BlockPos, Double> = HashMap()
+    // VS2 removed: wanderliteNodesToAdd required ship attachment (WanderShipControl) from VS2
+    // val wanderliteNodesToAdd: HashMap<BlockPos, Double> = HashMap()
 
     @JvmStatic
     fun tick(level: ServerLevel) {
-        val successfullyAdded = HashSet<BlockPos>()
-        wanderliteNodesToAdd.forEach { (pos, force) ->
-            val ship = level.getLoadedShipManagingPos(BlockPos(pos.x, pos.y, pos.z))
-            if (ship != null) {
-                val weight = MassDatapackResolver.getBlockStateMass(level.getBlockState(pos)) ?: return@forEach
-                ship.getAttachment<WanderShipControl>()?.addBlock(pos, weight) ?: return@forEach
-                successfullyAdded.add(pos)
-            }
-        }
-        successfullyAdded.forEach { wanderliteNodesToAdd.remove(it) }
+        // VS2 removed: wanderlite node registration required getLoadedShipManagingPos and WanderShipControl
     }
 
     fun getDuctNodePos(blockPos: BlockPos, level: Level?): DuctNodePos {
@@ -317,68 +288,14 @@ object ClockworkUtils {
     }
 
     fun retrieveGasInfoFromPocket(pos: Vector3ic, level: ServerLevel): Pair<HashMap<GasType, Double>, Double> {
-        val gasMap = HashMap<GasType, Double>()
-        for (type in GasTypeRegistry.GAS_TYPES.values) {
-            val key = ClockworkAugmentations.getComponentAugmentation("gas/" + type.resourceLocation.toString())
-            val gas = level.shipObjectWorld.getAirComponentAugmentation(key, pos.x(), pos.y(), pos.z(), level.dimensionId)
-            if (gas.isNaN() || gas < 0.0001) continue
-            gasMap[type] = gas
-        }
-
-        val heatEnergy = level.shipObjectWorld.getAirComponentAugmentation(
-            ClockworkAugmentations.getComponentAugmentation("heatEnergy"),
-            pos.x(),
-            pos.y(),
-            pos.z(),
-            level.dimensionId
-        )
-
-        return Pair(gasMap, heatEnergy)
+        // VS2 removed: getAirComponentAugmentation requires VS2 shipObjectWorld and dimensionId
+        return Pair(HashMap(), 0.0)
     }
 
-    fun getRealPos(level: Level?, blockPos: BlockPos): Vector3d
-    { return vsApi.getShipManagingBlock(level, blockPos)?.positionToWorld(blockPos.toJOMLD().add(0.5,0.5,0.5)) ?: blockPos.toJOMLD().add(0.5,0.5,0.5) }
-
-    /**
-     * Retrieves all components within a given chunk claim, using a key as reference.
-     *
-     * Deprecated implementation
-     */
-    @Deprecated("Deprecated. Replaced with proper implementation in VS Core.")
-    fun getAirComponentsInChunkClaim(claim: ChunkClaim, level: ServerLevel, referenceKey: DoubleComponentAugmentation): HashMap<Vector3i, Long> {
-        val map = HashMap<Vector3i, Long>()
-        level.shipObjectWorld.getFromEachAirComponentRoot(referenceKey, level.dimensionId).keys.forEach { pos ->
-            if (claim.contains(pos.chunkPos().x, pos.chunkPos().z)) {
-                map[pos.toVector3i()] = try {
-                    level.shipObjectWorld.getAirComponentSize(pos.first, pos.second, pos.third, level.dimensionId)
-                } catch (e: IllegalArgumentException) {
-                    -1
-                }
-                if (map[pos.toVector3i()] == -1L) {
-                    ClockworkMod.LOGGER.warn("Failed to get air component size at $pos")
-                }
-            }
-        }
-        return HashMap(map.filterNot { it.value == -1L })
+    fun getRealPos(level: Level?, blockPos: BlockPos): Vector3d {
+        // VS2 removed: getShipManagingBlock requires VS2 vsApi; return block center directly
+        return blockPos.toJOMLD().add(0.5, 0.5, 0.5)
     }
 
-    /**
-     * Retrieves all components within a given chunk claim, using a key as reference.
-     *
-     * Deprecated implementation
-     */
-    @Deprecated("Deprecated. Replaced with proper implementation in VS Core.")
-    fun getSolidComponentsInChunkClaim(claim: ChunkClaim, level: ServerLevel, referenceKey: DoubleComponentAugmentation): HashMap<Vector3i, Long> {
-        val map = HashMap<Vector3i, Long>()
-        level.shipObjectWorld.getFromEachSolidComponentRoot(referenceKey, level.dimensionId).keys.forEach { pos ->
-            if (claim.contains(pos.chunkPos().x, pos.chunkPos().z)) {
-                map[pos.toVector3i()] = try {
-                    level.shipObjectWorld.getSolidComponentSize(pos.first, pos.second, pos.third, level.dimensionId)
-                } catch (e: IllegalArgumentException) {
-                    -1
-                }
-            }
-        }
-        return HashMap(map.filterNot { it.value == -1L })
-    }
+    // VS2 removed: getAirComponentsInChunkClaim and getSolidComponentsInChunkClaim required VS2 shipObjectWorld
 }

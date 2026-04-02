@@ -38,11 +38,7 @@ import org.valkyrienskies.kelvin.impl.registry.GasTypeRegistry
 import org.valkyrienskies.kelvin.util.GasPhysics.mixtureCapacity
 import org.valkyrienskies.kelvin.util.KelvinExtensions.toDuctNodePos
 import org.valkyrienskies.kelvin.util.KelvinExtensions.toVector3i
-import org.valkyrienskies.mod.api.isBlockInShipyard
-import org.valkyrienskies.mod.common.dimensionId
-import org.valkyrienskies.mod.common.getLoadedShipManagingPos
-import org.valkyrienskies.mod.common.shipObjectWorld
-import org.valkyrienskies.mod.common.util.toJOMLD
+import org.valkyrienskies.clockwork.util.toJOMLD
 import kotlin.collections.component1
 import kotlin.collections.component2
 import kotlin.collections.iterator
@@ -162,12 +158,8 @@ class GasNozzleBlockEntity(type: BlockEntityType<*>, pos: BlockPos, state: Block
 
         if (oldHas != hasPocket) {
             if (hasPocket) {
-                val shipOn = serverLevel.getLoadedShipManagingPos(blockPos)
-                val upInWorld = if (shipOn != null) {
-                    shipOn.transform.rotation.transform(Direction.UP.step())
-                } else {
-                    Direction.UP.step()
-                }
+                // VS2 removed: ship rotation lookup; always use world-up
+                val upInWorld = Direction.UP.step()
                 serverLevel.playSound(
                     null,
                     blockPos,
@@ -242,13 +234,8 @@ class GasNozzleBlockEntity(type: BlockEntityType<*>, pos: BlockPos, state: Block
     }
 
     fun fetchBloon() {
-        val serverLevel = level as? ServerLevel ?: return
-        val ship = serverLevel.getLoadedShipManagingPos(blockPos) ?: return
-        val controller = BalloonController.getOrCreate(ship)
-        val balloonId = controller.tryGetOrCreateBalloon(blockPos.above(), serverLevel)
-        this.balloon = controller.getBalloonById(balloonId)
-        this.hasPocket = this.balloon != null
-        this.balloonVolume = this.balloon?.currentVolume ?: 0.0
+        // VS2 removed: fetchBloon requires VS2 getLoadedShipManagingPos and BalloonController ship attachment
+        this.hasPocket = false
         this.scanCooldown = 60
     }
 
@@ -303,34 +290,7 @@ class GasNozzleBlockEntity(type: BlockEntityType<*>, pos: BlockPos, state: Block
     }
 
     private fun heatPocket() {
-        val serverLevel = level as? ServerLevel ?: return
-
-        val pocketRef = blockPos.above()
-        val (pocketGasMass, pocketHeatEnergy) = retrieveGasInfoFromPocket(pocketRef.toVector3i(), serverLevel)
-        val pocketGasMassTotal = pocketGasMass.values.sum()
-
-        val gasMass = ClockworkMod.getKelvin().getGasMassAt(getDuctNodePosition())
-        val gasMassTotal = gasMass.values.sum()
-        val heatEnergy = ClockworkMod.getKelvin().getHeatEnergy(getDuctNodePosition())
-
-        val usedUpMass = gasMassTotal * pointer.value
-        val usedEnergy = heatEnergy * pointer.value
-
-        pocketTemperature = (pocketHeatEnergy + usedEnergy) / mixtureCapacity(pocketGasMass)
-
-        serverLevel.shipObjectWorld.setAirComponentAugmentation(
-            ClockworkAugmentations.getComponentAugmentation("heatEnergy"),
-            blockPos.x,
-            blockPos.y+1,
-            blockPos.z,
-            serverLevel.dimensionId,
-            pocketHeatEnergy + usedEnergy
-        )
-
-        gasMass.forEach {
-            KelvinMod.getKelvin().removeGas(getDuctNodePosition(), it.key,usedUpMass * it.value / gasMassTotal)
-        }
-        sendData()
+        // VS2 removed: heatPocket requires VS2 shipObjectWorld air component augmentations and ClockworkAugmentations
     }
 
     private fun heatPocketOld() {
@@ -432,9 +392,8 @@ class GasNozzleBlockEntity(type: BlockEntityType<*>, pos: BlockPos, state: Block
     override fun addToGoggleTooltip(tooltip: List<Component>?, isPlayerSneaking: Boolean): Boolean {
         ClockworkLang.translate("gui.gas_nozzle.info.title").forGoggles((tooltip as MutableList))
 
-        if (!level.isBlockInShipyard(blockPos.x, blockPos.y, blockPos.z)) {
-            ClockworkTooltipHelper.addHint(tooltip, "gui.gas_nozzle.info.no_ship", ChatFormatting.GOLD)
-        }
+        // VS2 removed: isBlockInShipyard requires VS2; always show no-ship hint without VS2
+        ClockworkTooltipHelper.addHint(tooltip, "gui.gas_nozzle.info.no_ship", ChatFormatting.GOLD)
         if (!hasPocket || pocketTemperature.isNaN()) {
             ClockworkTooltipHelper.addHint(
                 tooltip, "gui.gas_nozzle.info.no_pocket", ChatFormatting.GOLD, 0, 0,

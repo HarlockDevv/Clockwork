@@ -9,7 +9,7 @@ version = "${version}"
 displayName = "Clockwork"
 authors = ["potato", "priestoffern", "mrsterner", "fluffy"]
 description = '''
-Clockwork is a mod built on the framework of Valkyrien Skies 2 and Create, providing new opportunities for exploration,
+Clockwork is a mod built on the framework of Create, providing new opportunities for exploration,
 and new ways to discover your own path to adventure in your world.
 From new mechanics to new biomes, new creatures and new machines-
 when magical whimsy and technological ingenuity collide, Clockwork stands in their wake.
@@ -32,7 +32,7 @@ side = "BOTH"
 
 [[dependencies.vs_clockwork]]
 modId = "valkyrienskies"
-mandatory = true
+mandatory = false
 versionRange = "[2.4.6,)"
 ordering = "AFTER"
 side = "BOTH"

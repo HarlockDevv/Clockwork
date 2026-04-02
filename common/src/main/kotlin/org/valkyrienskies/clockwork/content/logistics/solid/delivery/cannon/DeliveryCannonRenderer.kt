@@ -32,7 +32,7 @@ import org.valkyrienskies.mod.api.getShipManagingBlock
 import org.valkyrienskies.mod.api.positionToWorld
 import org.valkyrienskies.mod.api.vsApi
 import org.valkyrienskies.mod.common.getLoadedShipManagingPos
-import org.valkyrienskies.mod.common.util.toJOMLD
+import org.valkyrienskies.clockwork.util.toJOMLD
 import org.valkyrienskies.mod.common.util.toMinecraft
 import java.util.Random
 import kotlin.math.*

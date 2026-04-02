@@ -39,7 +39,7 @@ import org.valkyrienskies.mod.common.dimensionId
 import org.valkyrienskies.mod.common.getShipManagingPos
 import org.valkyrienskies.mod.common.isBlockInShipyard
 import org.valkyrienskies.mod.common.shipObjectWorld
-import org.valkyrienskies.mod.common.util.toJOML
+import org.valkyrienskies.clockwork.util.toJOML
 
 class GrabTool : GravitronToolBase() {
 

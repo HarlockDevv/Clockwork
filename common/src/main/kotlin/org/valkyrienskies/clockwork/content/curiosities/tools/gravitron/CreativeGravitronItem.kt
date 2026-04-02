@@ -34,7 +34,7 @@ import org.valkyrienskies.clockwork.util.ClockworkUtils
 import org.valkyrienskies.core.util.datastructures.DenseBlockPosSet
 import org.valkyrienskies.mod.common.assembly.ShipAssembler
 import org.valkyrienskies.mod.common.assembly.ShipAssembler.assembleToShip
-import org.valkyrienskies.mod.common.util.toJOML
+import org.valkyrienskies.clockwork.util.toJOML
 import org.valkyrienskies.mod.common.util.toMinecraft
 import java.util.function.Consumer
 

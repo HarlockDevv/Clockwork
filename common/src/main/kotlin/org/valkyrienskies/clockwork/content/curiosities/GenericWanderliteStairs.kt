@@ -19,7 +19,7 @@ import org.valkyrienskies.mod.common.assembly.ShipAssembler
 import org.valkyrienskies.mod.common.getShipObjectManagingPos
 import org.valkyrienskies.mod.common.isBlockInShipyard
 import org.valkyrienskies.mod.common.shipObjectWorld
-import org.valkyrienskies.mod.common.util.toJOML
+import org.valkyrienskies.clockwork.util.toJOML
 import org.valkyrienskies.mod.common.util.toMinecraft
 
 class GenericWanderliteStairs(properties: Properties): StairBlock(ClockworkBlocks.SMOOTH_WANDERLITE.defaultState, properties), IWanderliteBlock {
@@ -59,32 +59,17 @@ class GenericWanderliteStairs(properties: Properties): StairBlock(ClockworkBlock
     }
 
     override fun onPlace(state: BlockState, level: Level, pos: BlockPos, oldState: BlockState, movedByPiston: Boolean) {
-        if (level is ServerLevel) {
-            val ship = level.getShipObjectManagingPos(pos)
-            if (ship != null) {
-                addToShip(level, ship, pos)
-            }
-        }
+        // VS2 removed: addToShip requires VS2 ship API
         super.onPlace(state, level, pos, oldState, movedByPiston)
     }
 
     override fun onRemove(state: BlockState, level: Level, pos: BlockPos, newState: BlockState, isMoving: Boolean) {
-        if (level is ServerLevel) {
-            val ship = level.getShipObjectManagingPos(pos)
-            if (ship != null) {
-                removeFromShip(ship, pos)
-            }
-        }
+        // VS2 removed: removeFromShip requires VS2 ship API
         super.onRemove(state, level, pos, newState, isMoving)
     }
 
     override fun destroy(level: LevelAccessor, pos: BlockPos, state: BlockState) {
-        if (level is ServerLevel) {
-            val ship = level.getShipObjectManagingPos(pos)
-            if (ship != null) {
-                removeFromShip(ship, pos)
-            }
-        }
+        // VS2 removed: removeFromShip requires VS2 ship API
         super.destroy(level, pos, state)
     }
 

@@ -10,7 +10,7 @@ import org.valkyrienskies.clockwork.content.logistics.solid.delivery.chute.Deliv
 import org.valkyrienskies.core.util.x
 import org.valkyrienskies.core.util.y
 import org.valkyrienskies.core.util.z
-import org.valkyrienskies.mod.common.util.toJOMLD
+import org.valkyrienskies.clockwork.util.toJOMLD
 
 object ActiveChutes {
      val actives: HashMap<BlockPos, DeliveryChuteBlockEntity> = HashMap()

@@ -20,9 +20,6 @@ import org.valkyrienskies.clockwork.content.propulsion.singleton.fan.EncasedFanC
 import org.valkyrienskies.clockwork.content.propulsion.singleton.fan.EncasedFanData;
 import org.valkyrienskies.clockwork.content.propulsion.singleton.fan.EncasedFanUpdateData;
 import org.valkyrienskies.clockwork.util.ClockworkConstants;
-import org.valkyrienskies.core.api.ships.LoadedServerShip;
-import org.valkyrienskies.mod.common.VSGameUtilsKt;
-import org.valkyrienskies.mod.common.util.VectorConversionsMCKt;
 
 @Mixin(EncasedFanBlockEntity.class)
 public abstract class MixinEncasedFanTileEntity extends KineticBlockEntity implements IForceApplierBE<EncasedFanUpdateData, EncasedFanData, EncasedFanCreateData, EncasedFanController> {
@@ -34,28 +31,10 @@ public abstract class MixinEncasedFanTileEntity extends KineticBlockEntity imple
         super(typeIn, pos, state);
     }
 
-    @Unique
-    private void vs_clockwork$handleController() {
-        //do stuff here (I like to have the inject call to a separate function so the breakpoint will work properly for this function)
-
-        LoadedServerShip ship = null;
-        if (level == null) return;
-        if (!level.isClientSide) {
-            if (VSGameUtilsKt.getShipObjectManagingPos(level, getBlockPos()) != null) {
-                ship = VSGameUtilsKt.getShipObjectManagingPos((ServerLevel) level, getBlockPos());
-            }
-        }
-        if (ship != null) {
-            EncasedFanController attachment = EncasedFanController.Companion.getOrCreate(ship);
-            if (attachment != null) {
-                tickData(attachment, true);
-            }
-        }
-    }
-
+    // VS2 ship controller tick removed - EncasedFanController requires Valkyrien Skies 2
     @Inject(method = "tick", at = @At("HEAD"), remap = false)
     private void vs_clockwork$injectTick(CallbackInfo ci) {
-        if (!isVirtual()) vs_clockwork$handleController();
+        // no-op without VS2
     }
 
     @Inject(method = "write", at = @At("TAIL"), remap = false)
@@ -77,12 +56,7 @@ public abstract class MixinEncasedFanTileEntity extends KineticBlockEntity imple
     }
 
 
-    @Inject(method = "remove", at = @At("HEAD"), remap = false)
-    private void vs_clockwork$injectRemove(CallbackInfo ci) {
-        if (level == null || level.isClientSide) {return;}
-        if (VSGameUtilsKt.getShipObjectManagingPos(level, getBlockPos()) == null) {return;}
-        LoadedServerShip ship = VSGameUtilsKt.getShipObjectManagingPos((ServerLevel) level, getBlockPos());
-        if (ship == null) {return;}
-        removeApplier(EncasedFanController.class, level, getBlockPos());
-    }
+    // VS2 ship controller remove logic commented out - requires Valkyrien Skies 2
+    // @Inject(method = "remove", at = @At("HEAD"), remap = false)
+    // private void vs_clockwork$injectRemove(CallbackInfo ci) { ... }
 }

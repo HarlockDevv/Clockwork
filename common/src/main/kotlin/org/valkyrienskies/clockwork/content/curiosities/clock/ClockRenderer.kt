@@ -13,7 +13,7 @@ import net.minecraft.util.Mth
 import net.minecraft.world.level.block.state.properties.BlockStateProperties
 import org.valkyrienskies.clockwork.ClockworkPartials
 import org.valkyrienskies.clockwork.util.EaseHelper
-import org.valkyrienskies.mod.common.util.toJOMLD
+import org.valkyrienskies.clockwork.util.toJOMLD
 import org.valkyrienskies.mod.common.util.toMinecraft
 
 class ClockRenderer(context: BlockEntityRendererProvider.Context) : SmartBlockEntityRenderer<ClockBlockEntity>(context) {

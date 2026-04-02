@@ -18,7 +18,7 @@ import org.valkyrienskies.core.api.world.PhysLevel
 import org.valkyrienskies.core.api.world.properties.DimensionId
 import org.valkyrienskies.core.impl.game.ships.PhysShipImpl
 import org.valkyrienskies.core.internal.ships.VsiPhysShip
-import org.valkyrienskies.mod.common.util.toJOMLD
+import org.valkyrienskies.clockwork.util.toJOMLD
 import java.lang.Math
 import java.util.concurrent.ConcurrentLinkedQueue
 import kotlin.collections.HashMap

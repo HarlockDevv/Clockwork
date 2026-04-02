@@ -23,8 +23,8 @@ import org.valkyrienskies.mod.common.dimensionId
 import org.valkyrienskies.mod.common.getLoadedShipManagingPos
 import org.valkyrienskies.mod.common.isBlockInShipyard
 import org.valkyrienskies.mod.common.shipObjectWorld
-import org.valkyrienskies.mod.common.util.toJOML
-import org.valkyrienskies.mod.common.util.toJOMLD
+import org.valkyrienskies.clockwork.util.toJOML
+import org.valkyrienskies.clockwork.util.toJOMLD
 import org.valkyrienskies.mod.common.util.toMinecraft
 
 class GravitronLeftClickPacket : C2SCWPacket {

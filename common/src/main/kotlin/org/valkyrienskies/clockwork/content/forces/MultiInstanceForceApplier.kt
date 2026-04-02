@@ -6,19 +6,19 @@ import org.valkyrienskies.clockwork.content.forces.data.ForceApplierUpdateData
 import org.valkyrienskies.core.api.ships.LoadedServerShip
 import org.valkyrienskies.core.api.ships.PhysShip
 import org.valkyrienskies.core.api.ships.ServerShip
-import org.valkyrienskies.core.api.ships.ShipPhysicsListener
 import org.valkyrienskies.core.api.world.PhysLevel
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ConcurrentLinkedQueue
 
-interface MultiInstanceForceApplier<A: ForceApplierUpdateData, D: ForceApplierData<A>, C: ForceApplierCreateData<D>>: ShipPhysicsListener {
+// VS2 removed: no longer extends ShipPhysicsListener
+interface MultiInstanceForceApplier<A: ForceApplierUpdateData, D: ForceApplierData<A>, C: ForceApplierCreateData<D>> {
     val appliers: HashMap<Int, D>
     val applierUpdateData: ConcurrentLinkedQueue<Pair<Int, A>>
     val createdAppliers: ConcurrentLinkedQueue<Pair<Int, C>>
     val removedAppliers: ConcurrentLinkedQueue<Int>
     var nextApplierID: Int
 
-    override fun physTick(physShip: PhysShip, physLevel: PhysLevel) {
+    fun physTick(physShip: PhysShip, physLevel: PhysLevel) {
         pollChanges()
     }
 

@@ -24,7 +24,7 @@ import org.valkyrienskies.core.api.ships.ClientShip
 import org.valkyrienskies.mod.common.hooks.VSGameEvents
 import org.valkyrienskies.mod.common.hooks.VSGameEvents.postRenderShip
 import org.valkyrienskies.mod.common.hooks.VSGameEvents.renderShip
-import org.valkyrienskies.mod.common.util.toJOML
+import org.valkyrienskies.clockwork.util.toJOML
 
 
 @Environment(EnvType.CLIENT)

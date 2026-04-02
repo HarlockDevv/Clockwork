@@ -23,7 +23,8 @@ import kotlin.math.abs
 import kotlin.math.sign
 
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
-class BearingController : ShipPhysicsListener {
+// VS2 removed: ShipPhysicsListener requires VS2
+class BearingController {
     val bearingData = HashMap<Int, PhysBearingData>()
 
     @JsonIgnore
@@ -35,7 +36,7 @@ class BearingController : ShipPhysicsListener {
     private var nextBearingID = 0
 
     //attachment from subship moves iteslf
-    override fun physTick(physShip: PhysShip, physLevel: PhysLevel) {
+    fun physTick(physShip: PhysShip, physLevel: PhysLevel) {
         while (!createdBearings.isEmpty()) { createdBearings.remove().also { (id, data) -> bearingData[id] = data } }
         while (!removedBearings.isEmpty()) { bearingData.remove(removedBearings.remove()) }
         bearingUpdateData.forEach { (id: Int, data: PhysBearingUpdateData) ->

@@ -37,7 +37,8 @@ import kotlin.math.max
 
 @OptIn(PhysTickOnly::class, VsBeta::class)
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
-class BalloonController: ShipPhysicsListener {
+// VS2 removed: ShipPhysicsListener requires VS2
+class BalloonController {
 
     val balloons: ConcurrentHashMap<Int, BalloonData> = ConcurrentHashMap()
     @JsonIgnore
@@ -46,7 +47,7 @@ class BalloonController: ShipPhysicsListener {
     val nextBalloonID: Int
         get() = (balloons.keys.maxOrNull() ?: 0) + 1
 
-    override fun physTick(
+    fun physTick(
         physShip: PhysShip,
         physLevel: PhysLevel
     ) {

@@ -4,25 +4,11 @@ import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.level.Level
-import org.valkyrienskies.clockwork.content.forces.WanderShipControl
-import org.valkyrienskies.clockwork.util.ClockworkUtils
-import org.valkyrienskies.core.api.ships.LoadedServerShip
-import org.valkyrienskies.mod.common.assembly.ShipAssembler
-import org.valkyrienskies.mod.common.config.MassDatapackResolver
-import org.valkyrienskies.mod.common.util.toJOMLD
-import org.valkyrienskies.mod.common.util.toMinecraft
-import org.valkyrienskies.mod.common.util.transformPosition
+import net.minecraft.world.level.block.state.BlockState
 
 interface IWanderliteBlock {
 
-    fun addToShip(level: ServerLevel, ship: LoadedServerShip, pos: BlockPos) {
-        val weight = MassDatapackResolver.getBlockStateMass(level.getBlockState(pos)) ?: return
-
-        WanderShipControl.getOrCreate(ship).addBlock(pos, weight)
-    }
-    fun removeFromShip(ship: LoadedServerShip, pos: BlockPos) {
-        WanderShipControl.getOrCreate(ship).removeBlock(pos)
-    }
+    // VS2 removed: addToShip/removeFromShip require VS2 LoadedServerShip and WanderShipControl attachment
     fun collectBlockPositions(worldIn: Level, pos: BlockPos, depth: Int, collectedPositions: MutableList<BlockPos> = mutableListOf()): MutableList<BlockPos> {
         // Base case: If the depth is 0, return an empty collection
         if (depth == 0) {
@@ -50,25 +36,8 @@ interface IWanderliteBlock {
         return positionsInThisIteration
     }
 
-    fun shipifyBlock(level: ServerLevel, blockPos: BlockPos)  {
-        val blockList = collectBlockPositions(level, blockPos, 4)
-
-        val notAllAir = blockList.any { !level.getBlockState(it).isAir }
-        if (!notAllAir) {
-            return
-        }
-
-        val ship = ShipAssembler.assembleToShip(level, blockList.toSet(), 1.0)
-
-        for (pos in blockList) {
-            // Our old world-space position is now BlockState{air}
-            val shipBlockPos = BlockPos.containing(ship.transform.worldToShip.transformPosition(pos.center))
-
-            val weight = MassDatapackResolver.getBlockStateMass(level.getBlockState(shipBlockPos)) ?: continue
-            ClockworkUtils.wanderliteNodesToAdd[BlockPos.containing(ship.worldToShip.transformPosition(pos.toJOMLD()).toMinecraft())] = weight
-            //addToShip(realConnectedShip, BlockPos(realConnectedShip.worldToShip.transformPosition(Vector3d(pos)).toMinecraft()), 2.0)
-        }
-
+    fun shipifyBlock(level: ServerLevel, blockPos: BlockPos) {
+        // VS2 removed: shipifyBlock requires VS2 ShipAssembler, wanderliteNodesToAdd, and ship transforms
     }
 
 }

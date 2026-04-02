@@ -18,7 +18,7 @@ import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.phys.Vec3
 import org.apache.commons.lang3.tuple.Pair
 import org.valkyrienskies.mod.common.getShipManagingPos
-import org.valkyrienskies.mod.common.util.toJOML
+import org.valkyrienskies.clockwork.util.toJOML
 import org.valkyrienskies.mod.common.util.toMinecraft
 import java.util.function.Function
 import java.util.function.IntConsumer

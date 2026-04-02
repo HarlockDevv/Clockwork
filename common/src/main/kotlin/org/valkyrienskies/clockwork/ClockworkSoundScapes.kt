@@ -10,7 +10,7 @@ import org.valkyrienskies.clockwork.util.sound.SoundScape
 import org.valkyrienskies.core.api.ships.Ship
 import org.valkyrienskies.mod.common.getShipManagingPos
 import org.valkyrienskies.mod.common.toWorldCoordinates
-import org.valkyrienskies.mod.common.util.toJOMLD
+import org.valkyrienskies.clockwork.util.toJOMLD
 import org.valkyrienskies.mod.common.util.toMinecraft
 import java.util.*
 import java.util.function.Consumer

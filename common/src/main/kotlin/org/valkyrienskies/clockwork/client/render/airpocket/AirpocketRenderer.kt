@@ -43,7 +43,7 @@ import org.valkyrienskies.mod.api.vsApi
 import org.valkyrienskies.mod.common.getShipManagingPos
 import org.valkyrienskies.mod.common.shipObjectWorld
 import org.valkyrienskies.mod.common.util.IEntityDraggingInformationProvider
-import org.valkyrienskies.mod.common.util.toJOMLD
+import org.valkyrienskies.clockwork.util.toJOMLD
 import org.valkyrienskies.mod.common.vsCore
 import org.w3c.dom.Node
 import kotlin.collections.mutableSetOf

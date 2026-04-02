@@ -36,11 +36,6 @@ import org.valkyrienskies.clockwork.util.arc.LightningManager
 import org.valkyrienskies.clockwork.util.arc.LightningRenderer
 import org.valkyrienskies.kelvin.KelvinMod
 import org.valkyrienskies.kelvin.impl.client.DuctNetworkClient
-import org.valkyrienskies.mod.api.vsApi
-import org.valkyrienskies.mod.common.ValkyrienSkiesMod
-import org.valkyrienskies.mod.common.hooks.VSGameEvents
-import org.valkyrienskies.mod.common.shipObjectWorld
-import org.valkyrienskies.mod.common.shipWorldNullable
 
 object ClockworkModClient {
 
@@ -105,10 +100,7 @@ object ClockworkModClient {
             ClockworkSoundScapes.tick()
             SecondScrollValueRenderer.tickSecond()
             ClockworkModClient.tickDebugLightningNodes(it)
-            val ships = Minecraft.getInstance().level.shipWorldNullable?.loadedShips ?: return@Client
-            ships.forEach { it ->
-                //MeteorRenderer.updateMeteorStateWorld(it, MeteorRenderer.meteorList[it.id] ?: return@forEach)
-            }
+            // VS2 removed: ship world access requires Valkyrien Skies 2
         })
 //        VSGameEvents.postRenderShip.on {
 //            MeteorRenderer.onShipRender(it)

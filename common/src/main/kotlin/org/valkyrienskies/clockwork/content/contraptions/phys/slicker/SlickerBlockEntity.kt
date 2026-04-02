@@ -27,7 +27,7 @@ import org.valkyrienskies.clockwork.util.gtpa
 import org.valkyrienskies.core.internal.joints.VSFixedJoint
 import org.valkyrienskies.core.impl.util.serialization.VSJacksonUtil
 import org.valkyrienskies.mod.common.toWorldCoordinates
-import org.valkyrienskies.mod.common.util.toJOML
+import org.valkyrienskies.clockwork.util.toJOML
 
 
 class SlickerBlockEntity(type: BlockEntityType<*>, pos: BlockPos, state: BlockState) : SmartBlockEntity(type, pos, state) {

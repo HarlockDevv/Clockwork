@@ -8,7 +8,7 @@ import org.joml.Vector3ic
 import org.valkyrienskies.clockwork.content.forces.data.ForceApplierCreateData
 import org.valkyrienskies.clockwork.content.forces.data.ForceApplierData
 import org.valkyrienskies.clockwork.content.physicalities.reactionwheel.ReactionWheelBlockEntity
-import org.valkyrienskies.mod.common.util.toJOML
+import org.valkyrienskies.clockwork.util.toJOML
 
 data class ReactionWheelCreateData(override val position: Vector3ic, val direction: Vector3ic, val currentSpeed: Double): ForceApplierCreateData<ReactionWheelData> {
     override fun fromCreateData(): ReactionWheelData {

@@ -8,8 +8,8 @@ import org.valkyrienskies.clockwork.content.contraptions.propeller.PropellerBear
 import org.valkyrienskies.clockwork.content.contraptions.propeller.blades.BladeData
 import org.valkyrienskies.clockwork.content.forces.data.ForceApplierCreateData
 import org.valkyrienskies.clockwork.content.generic.IForceApplierBE
-import org.valkyrienskies.mod.common.util.toJOML
-import org.valkyrienskies.mod.common.util.toJOMLD
+import org.valkyrienskies.clockwork.util.toJOML
+import org.valkyrienskies.clockwork.util.toJOMLD
 
 data class PropCreateData(
     override val position: Vector3ic,

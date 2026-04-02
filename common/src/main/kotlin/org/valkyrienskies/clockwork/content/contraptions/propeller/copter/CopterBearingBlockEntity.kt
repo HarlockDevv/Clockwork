@@ -23,26 +23,17 @@ import org.valkyrienskies.clockwork.content.contraptions.propeller.data.PropUpda
 import org.valkyrienskies.clockwork.util.MathFunctions
 import org.valkyrienskies.clockwork.util.PIDQuaternion
 import org.valkyrienskies.clockwork.util.PIDstance
-import org.valkyrienskies.core.api.ships.PhysShip
-import org.valkyrienskies.core.api.world.PhysLevel
-import org.valkyrienskies.core.api.world.properties.DimensionId
-import org.valkyrienskies.mod.api.BlockEntityPhysicsListener
-import org.valkyrienskies.mod.api.dimensionId
-import org.valkyrienskies.mod.api.toJOML
-import org.valkyrienskies.mod.api.toMinecraft
-import org.valkyrienskies.mod.common.getLoadedShipManagingPos
-import org.valkyrienskies.mod.common.util.toJOMLD
-import org.valkyrienskies.mod.util.getVector3d
-import org.valkyrienskies.mod.util.putVector3d
+import org.valkyrienskies.clockwork.util.toJOML
+import org.valkyrienskies.clockwork.util.toJOMLD
+import org.valkyrienskies.clockwork.util.putVector3d
+import org.valkyrienskies.clockwork.util.getVector3dVS
 import kotlin.math.abs
 import kotlin.math.atan2
 import kotlin.math.exp
 
 class CopterBearingBlockEntity(type: BlockEntityType<*>, pos: BlockPos, state: BlockState) : PropellerBearingBlockEntity(type, pos,
     state, brass = true
-), BlockEntityPhysicsListener {
-
-    override lateinit var dimension: DimensionId
+) {
 
     val facing: Direction
         get() = blockState.getValue(BlockStateProperties.FACING)
@@ -88,7 +79,7 @@ class CopterBearingBlockEntity(type: BlockEntityType<*>, pos: BlockPos, state: B
     }
 
     override fun read(compound: CompoundTag, clientPacket: Boolean) {
-        desiredLocalOffset = compound.getVector3d("DesiredOffsetFromPower") ?: Vector3d(0.0, 0.0, 0.0)
+        desiredLocalOffset = compound.getVector3dVS("DesiredOffsetFromPower") ?: Vector3d(0.0, 0.0, 0.0)
         super.read(compound, clientPacket)
     }
 
@@ -217,46 +208,7 @@ class CopterBearingBlockEntity(type: BlockEntityType<*>, pos: BlockPos, state: B
         return Vector3d(currentAxis).rotate(qStep).normalize()
     }
 
-    override fun physTick(
-        physShip: PhysShip?,
-        physLevel: PhysLevel
-    ) {
-        if (physShip == null) return
-        if (!this.running) return
-
-        val invRotation = physShip.transform.shipToWorldRotation.invert(Quaterniond())
-        //val modifiedInvRotation = Quaterniond(invRotation.x, -invRotation.y, invRotation.z, invRotation.w)
-        //val localTarget = MathFunctions.rotateVecWithQuat(facing.normal.toJOMLD().mul(getDirectionScale().toDouble()).toMinecraft(), invRotation)
-        val facingNormal = facing.normal.toJOMLD()
-        // if facing is negative axis, flip facing
-        if (facing == Direction.DOWN || facing == Direction.NORTH || facing == Direction.WEST) {
-            //facingNormal.mul(-1.0)
-        }
-        val desiredLocal = Vector3d(facingNormal).rotate(invRotation).mul(getDirectionScale().toDouble()).normalize().add(desiredLocalOffset).normalize()
-        val blockAxis = tiltVector.toJOML().normalize() // .rotate(physShip.transform.shipToWorldRotation)
-        if (facing == Direction.DOWN || facing == Direction.NORTH || facing == Direction.WEST) {
-            blockAxis.mul(-1.0)
-        }
-
-        // You need ω in ship-local (rad/s). If you only have world ω, rotate it by invShipRot too.
-        val omegaLocal = Vector3d(physShip.angularVelocity)
-        .rotate(invRotation)
-
-        val stabilized = computeStabilizedTarget(
-            blockAxis = blockAxis,
-            desiredUp = desiredLocal,
-            omegaShipLocal = omegaLocal,
-            kp = 2.0,      // start 3..10
-            ki = 0.8,
-            kd = 6.0,      // start 1..6
-            dt = 1.0/60.0
-        )
-
-        setTiltTarget(Vec3(stabilized.x, stabilized.y, stabilized.z), true)
-        lerpTarget()
-
-        tiltCooldown++
-    }
+    // VS2 removed: physTick requires VS2 PhysShip/PhysLevel (BlockEntityPhysicsListener)
 
     override fun tick() {
         super.tick()
@@ -269,16 +221,6 @@ class CopterBearingBlockEntity(type: BlockEntityType<*>, pos: BlockPos, state: B
         }
 
         if (level!!.isClientSide) return clientTick()
-        if (running) {
-            if (level is ServerLevel && !isVirtual) {
-                val ship = (level as ServerLevel).getLoadedShipManagingPos(
-                    blockPos
-                )
-                if (ship != null) {
-                    // lerpTarget()
-                }
-            }
-        }
     }
 
     override fun assemble() {
@@ -292,38 +234,8 @@ class CopterBearingBlockEntity(type: BlockEntityType<*>, pos: BlockPos, state: B
     }
 
     private fun clientTick() {
-        if (level!!.isClientSide) {
-            val ship = (level as ClientLevel).getLoadedShipManagingPos(
-                blockPos
-            )
-            if (ship != null && this.running) {
-                val invRotation = ship.renderTransform.shipToWorldRotation.invert(Quaterniond())
-                //val modifiedInvRotation = Quaterniond(invRotation.x, -invRotation.y, invRotation.z, invRotation.w)
-
-                //val localTarget = MathFunctions.rotateVecWithQuat(facing.normal.toJOMLD().mul(getDirectionScale().toDouble()).toMinecraft(), invRotation)
-
-                val facingNormal = facing.normal.toJOMLD()
-                // if facing is negative axis, flip facing
-                if (facing == Direction.DOWN || facing == Direction.NORTH || facing == Direction.WEST) {
-                    //facingNormal.mul(-1.0)
-                }
-                val desiredLocal = Vector3d(facingNormal).rotate(invRotation).mul(getDirectionScale().toDouble()).add(desiredLocalOffset).normalize()
-
-                val trueTarget = if (stopping) {
-                    VecHelper.lerp((disassemblyProgress / totalDisassemblyTime).toFloat(), blockNormalVector, clientTargetTiltVector)
-                } else {
-                    if (facing == Direction.DOWN || facing == Direction.NORTH || facing == Direction.WEST) {
-                        Vec3(-desiredLocal.x, -desiredLocal.y, -desiredLocal.z)
-                    } else {
-                        Vec3(desiredLocal.x, desiredLocal.y, desiredLocal.z)
-                    }
-                }
-
-                setTiltTarget(trueTarget)
-            } else {
-                setTiltTarget(blockNormalVector ?: Vec3(0.0, 1.0, 0.0))
-            }
-        }
+        // VS2 removed: ship-based tilt target requires VS2 ClientShip; fall back to block normal
+        setTiltTarget(blockNormalVector ?: Vec3(0.0, 1.0, 0.0))
     }
 
     override fun applyPowerEffect() {

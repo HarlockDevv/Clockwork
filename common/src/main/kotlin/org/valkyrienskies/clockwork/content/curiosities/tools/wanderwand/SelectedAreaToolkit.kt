@@ -13,7 +13,7 @@ import org.joml.Vector3ic
 import org.joml.primitives.AABBd
 import org.valkyrienskies.core.util.datastructures.DenseBlockPosSet
 import org.valkyrienskies.mod.common.util.toBlockPos
-import org.valkyrienskies.mod.common.util.toJOML
+import org.valkyrienskies.clockwork.util.toJOML
 import org.valkyrienskies.mod.common.util.toMinecraft
 import kotlin.math.roundToInt
 

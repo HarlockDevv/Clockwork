@@ -39,8 +39,8 @@ import org.valkyrienskies.core.internal.joints.VSJointMaxForceTorque
 import org.valkyrienskies.core.internal.joints.VSJointPose
 import org.valkyrienskies.core.impl.util.serialization.VSJacksonUtil
 import org.valkyrienskies.mod.common.*
-import org.valkyrienskies.mod.common.util.toJOML
-import org.valkyrienskies.mod.common.util.toJOMLD
+import org.valkyrienskies.clockwork.util.toJOML
+import org.valkyrienskies.clockwork.util.toJOMLD
 import org.valkyrienskies.mod.common.util.toMinecraft
 import org.valkyrienskies.mod.mixinducks.mod_compat.create.IMixinControlledContraptionEntity
 

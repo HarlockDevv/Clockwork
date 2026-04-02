@@ -21,7 +21,7 @@ import net.minecraft.world.phys.Vec3
 import org.valkyrienskies.clockwork.ClockworkConfig
 import org.valkyrienskies.clockwork.content.contraptions.propeller.contraption.PropellerContraption
 import org.valkyrienskies.clockwork.content.forces.PropellerController
-import org.valkyrienskies.mod.common.util.toJOMLD
+import org.valkyrienskies.clockwork.util.toJOMLD
 import org.valkyrienskies.mod.common.util.toMinecraft
 import kotlin.math.absoluteValue
 

@@ -7,22 +7,21 @@ import net.minecraft.core.Direction
 import org.joml.Vector3d
 import org.joml.Vector3i
 import org.valkyrienskies.clockwork.content.propulsion.sugar_rocket.SugarRocketData
-import org.valkyrienskies.core.api.ships.LoadedServerShip
 import org.valkyrienskies.core.api.ships.PhysShip
-import org.valkyrienskies.core.api.ships.ShipPhysicsListener
 import org.valkyrienskies.core.api.world.PhysLevel
-import org.valkyrienskies.mod.common.util.toJOML
-import org.valkyrienskies.mod.common.util.toJOMLD
+import org.valkyrienskies.clockwork.util.toJOML
+import org.valkyrienskies.clockwork.util.toJOMLD
 import java.util.concurrent.ConcurrentLinkedQueue
 
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
-class SugarRocketController : ShipPhysicsListener {
+// VS2 removed: ShipPhysicsListener requires VS2
+class SugarRocketController {
 
     val newRockets = ConcurrentLinkedQueue<Pair<Vector3i, Vector3d>>()
     val removedRockets = ConcurrentLinkedQueue<Vector3i>()
     val burningRockets: HashSet<SugarRocketData> = HashSet() // Used instead of HashMap for auto Serialization
 
-    override fun physTick(physShip: PhysShip, physLevel: PhysLevel) {
+    fun physTick(physShip: PhysShip, physLevel: PhysLevel) {
         while (newRockets.isNotEmpty()) {
             val rocket = newRockets.poll()
             burningRockets.add(SugarRocketData(rocket.first, rocket.second))
@@ -48,15 +47,6 @@ class SugarRocketController : ShipPhysicsListener {
     }
 
     companion object {
-        fun getOrCreate(ship: LoadedServerShip): SugarRocketController {
-            val attachment = ship.getAttachment(SugarRocketController::class.java)
-            if (attachment == null) {
-                val newAttachment = SugarRocketController()
-                ship.setAttachment(newAttachment)
-                return newAttachment
-            } else {
-                return attachment
-            }
-        }
+        // VS2 removed: getOrCreate requires VS2 LoadedServerShip attachment API
     }
 }

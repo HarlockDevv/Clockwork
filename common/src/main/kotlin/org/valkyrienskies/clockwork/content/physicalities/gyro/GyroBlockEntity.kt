@@ -12,8 +12,6 @@ import net.minecraft.world.level.block.entity.BlockEntityType
 import net.minecraft.world.level.block.state.BlockState
 import org.joml.Vector3d
 import org.valkyrienskies.clockwork.content.physicalities.IClockworkWheelBE
-import org.valkyrienskies.core.api.ships.LoadedServerShip
-import org.valkyrienskies.mod.common.getShipObjectManagingPos
 import java.awt.Point
 
 
@@ -29,8 +27,7 @@ class GyroBlockEntity(typeIn: BlockEntityType<*>?, pos: BlockPos, state: BlockSt
     var previousCoreAngle = 0f
 
     var shipUpVec: Vector3d = Vector3d(0.0,1.0,0.0)
-    private val ship: LoadedServerShip? get() = (level as ServerLevel).getShipObjectManagingPos(this.blockPos)
-    private val control: GyroShipControl? get() = ship?.getAttachment(GyroShipControl::class.java)
+    // VS2 removed: ship/control require Valkyrien Skies 2
 
     fun getInterpolatedCoreAngle(partialTicks: Float): Float {
         previousCoreAngle = coreAngle
@@ -55,11 +52,7 @@ class GyroBlockEntity(typeIn: BlockEntityType<*>?, pos: BlockPos, state: BlockSt
         up.rotateZ((redstonePower.y / 15.0) * Math.PI/2)
         shipUpVec = up
 
-        if (level is ServerLevel) {
-            control?.ship = ship
-            control?.speed = getSpeed()
-            control?.pointTowards(shipUpVec, 1.0f)
-        }
+        // VS2 removed: gyro ship control requires Valkyrien Skies 2
 
         val targetSpeed = getSpeed()
         visualSpeed.updateChaseTarget(targetSpeed)

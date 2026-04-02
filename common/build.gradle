@@ -37,22 +37,21 @@ dependencies {
 
     //compileOnly "maven.modrinth:iris:1.6.17+1.20.1"
 
-    // VS2
-    modApi("org.valkyrienskies:valkyrienskies-120-common:${rootProject.vs2_version}") {
+    // VS2 - compileOnly: no longer a runtime dependency
+    modCompileOnly("org.valkyrienskies:valkyrienskies-120-common:${rootProject.vs2_version}") {
         exclude group: "com.simibubi"
     }
-    implementation("org.valkyrienskies.core:api:${rootProject.vscore_version}") {
+    compileOnly("org.valkyrienskies.core:api:${rootProject.vscore_version}") {
         exclude group: 'org.joml', module: ''
     }
-    implementation("org.valkyrienskies.core:impl:${rootProject.vscore_version}") {
+    compileOnly("org.valkyrienskies.core:impl:${rootProject.vscore_version}") {
         exclude group: 'org.joml', module: ''
     }
-    implementation("org.valkyrienskies.core:internal:${rootProject.vscore_version}") {
+    compileOnly("org.valkyrienskies.core:internal:${rootProject.vscore_version}") {
         exclude group: 'org.joml', module: ''
     }
 
-    // Kelvin
-
+    // Kelvin (standalone mod, no VS2 dependency)
     modImplementation("org.valkyrienskies.kelvin:kelvin-common:${rootProject.minecraft_version}-${rootProject.kelvin_version}") {
         exclude group: 'org.joml', module: ''
     }

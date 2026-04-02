@@ -7,13 +7,14 @@ import org.valkyrienskies.clockwork.content.curiosities.tools.gravitron.Gravitro
 import org.valkyrienskies.core.api.attachment.getAttachment
 import org.valkyrienskies.core.api.ships.LoadedServerShip
 import org.valkyrienskies.core.api.ships.PhysShip
-import org.valkyrienskies.core.api.ships.ShipPhysicsListener
 import org.valkyrienskies.core.api.world.PhysLevel
 
-class GravitronController : ShipPhysicsListener {
+// VS2 removed: ShipPhysicsListener requires VS2; physTick is dead code without VS2 ship registration
+class GravitronController {
     var data: GravitronForceInducerData? = null
 
-    override fun physTick(physShip: PhysShip, physLevel: PhysLevel) {
+    // VS2 removed: physTick is never called without VS2 ship registration
+    fun physTick(physShip: PhysShip, physLevel: PhysLevel) {
         val dataCopy = data ?: return
 
         run {
