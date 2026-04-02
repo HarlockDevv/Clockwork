@@ -17,10 +17,8 @@ import net.minecraftforge.fml.common.Mod;
 import org.valkyrienskies.clockwork.ClockworkModClient;
 import org.valkyrienskies.clockwork.client.render.airpocket.AirpocketRenderer;
 import org.valkyrienskies.clockwork.client.render.debug.KelvinEdgeRenderer;
-import org.valkyrienskies.clockwork.content.curiosities.meteor.MeteorRenderer;
 import org.valkyrienskies.clockwork.util.arc.LightningRenderer;
-import org.valkyrienskies.core.api.world.ClientShipWorld;
-import org.valkyrienskies.mod.api.ValkyrienSkies;
+// VS2 removed: ClientShipWorld and ValkyrienSkies require VS2 runtime
 
 import static net.createmod.ponder.PonderClient.isGameActive;
 
@@ -30,10 +28,7 @@ public class ClockworkClientEvents {
     public static void onRenderWorld(RenderLevelStageEvent event) {
         if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_TRANSLUCENT_BLOCKS) {
             AirpocketRenderer.render(Minecraft.getInstance().level, event.getPoseStack(), Minecraft.getInstance().gameRenderer.getMainCamera());
-            ClientShipWorld shipWorld = ValkyrienSkies.getShipWorld(Minecraft.getInstance());
-            shipWorld.getLoadedShips().forEach ( ship -> {
-                MeteorRenderer.INSTANCE.onShipRender(ship, event.getPoseStack(), event.getCamera(), Minecraft.getInstance().renderBuffers().bufferSource(), AnimationTickHolder.getPartialTicks());
-            });
+            // VS2 removed: ship world iteration and MeteorRenderer.onShipRender require VS2 runtime
         }
 
         if (event.getStage() != RenderLevelStageEvent.Stage.AFTER_PARTICLES) {

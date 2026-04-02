@@ -1,6 +1,5 @@
 package org.valkyrienskies.clockwork.util
 
-import com.fasterxml.jackson.core.JsonProcessingException
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap
 import net.minecraft.core.BlockPos
@@ -19,13 +18,11 @@ import org.joml.primitives.AABBi
 import org.joml.primitives.AABBic
 import org.valkyrienskies.clockwork.ClockworkMod
 import org.valkyrienskies.clockwork.content.curiosities.tools.wanderwand.SelectedAreaToolkit
-import org.valkyrienskies.core.impl.util.serialization.VSJacksonUtil.defaultMapper
 import org.valkyrienskies.kelvin.api.DuctNodePos
 import org.valkyrienskies.kelvin.api.GasType
 import org.valkyrienskies.kelvin.impl.registry.GasTypeRegistry
 import org.valkyrienskies.kelvin.util.INodeBlockEntity
 import org.valkyrienskies.clockwork.util.toJOMLD
-import java.io.IOException
 import java.util.*
 import java.util.stream.Collectors
 import kotlin.collections.HashMap
@@ -263,27 +260,12 @@ object ClockworkUtils {
     }
 
     fun loadArea(nbt: CompoundTag?): SelectedAreaToolkit {
-        val toolKit = SelectedAreaToolkit()
-        if (nbt != null) {
-            val nb = nbt.getByteArray(ClockworkConstants.Nbt.SELECTED_DATA)
-            try {
-                toolKit.overwriteFrom(
-                    defaultMapper.readValue(
-                        nb,
-                        SelectedAreaToolkit::class.java
-                    )
-                )
-            } catch (ignored: IOException) {
-            }
-        }
-        return toolKit
+        // VS2 removed: used VSJacksonUtil.defaultMapper (VSCore) + Jackson for JSON serialization
+        return SelectedAreaToolkit()
     }
 
     fun saveArea(nbt: CompoundTag, area: SelectedAreaToolkit?): CompoundTag {
-        try {
-            nbt.putByteArray(ClockworkConstants.Nbt.SELECTED_DATA, defaultMapper.writeValueAsBytes(area))
-        } catch (ignored: JsonProcessingException) {
-        }
+        // VS2 removed: used VSJacksonUtil.defaultMapper (VSCore) + Jackson for JSON serialization
         return nbt
     }
 
