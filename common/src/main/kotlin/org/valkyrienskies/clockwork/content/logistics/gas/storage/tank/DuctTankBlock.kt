@@ -17,7 +17,7 @@ import org.valkyrienskies.clockwork.ClockworkBlockEntities
 import org.valkyrienskies.clockwork.ClockworkMod
 import org.valkyrienskies.clockwork.ClockworkModClient
 import org.valkyrienskies.clockwork.util.gui.IHaveDuctStats
-import org.valkyrienskies.core.util.squared
+// VS2 removed: org.valkyrienskies.core.util.squared inlined below
 import org.valkyrienskies.kelvin.KelvinMod.KELVINLOGGER
 import org.valkyrienskies.kelvin.api.DuctNode
 import org.valkyrienskies.kelvin.api.DuctNodePos
@@ -50,7 +50,7 @@ class DuctTankBlock(properties: Properties) : Block(properties), INodeBlock, IBE
         if (state.isAir || state.block !is INodeBlock) return
 
         withBlockEntityDo(level, pos) { blockEntity ->
-            val size = blockEntity.width.squared() * blockEntity.height
+            val size = blockEntity.width * blockEntity.width * blockEntity.height
             ClockworkMod.getKelvin().addNode(blockEntity.getDuctNodePosition(), createTankNode(blockEntity.getDuctNodePosition(), size.toDouble()))
         }
     }

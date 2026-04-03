@@ -1,11 +1,10 @@
 package org.valkyrienskies.clockwork.content.logistics.gas.duct
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.nbt.CompoundTag
+import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.level.block.entity.BlockEntityType
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.phys.AABB
@@ -22,7 +21,6 @@ class DuctBlockEntity(type: BlockEntityType<*>, pos: BlockPos, state: BlockState
 
     val DIR_TO_CONNECTION_TYPE: EnumMap<Direction, DuctEdgeType> = EnumMap(Direction::class.java)
     val edgeData = HashMap<EdgePos, CompoundTag>()
-    var objectMapper: ObjectMapper = ObjectMapper().registerKotlinModule()
 
     var shouldUpdateEdges = false
 
@@ -51,7 +49,7 @@ class DuctBlockEntity(type: BlockEntityType<*>, pos: BlockPos, state: BlockState
 
         val edgeDataTag = tag.get("edgeData") as? CompoundTag ?: return
         edgeDataTag.allKeys.forEach {
-            val edgePos = objectMapper.readValue(it, EdgePos::class.java)
+            val edgePos = stringToEdgePos(it)
             val tag = edgeDataTag.get(it) as? CompoundTag ?: return
             edgeData[edgePos] = tag
         }
@@ -67,7 +65,7 @@ class DuctBlockEntity(type: BlockEntityType<*>, pos: BlockPos, state: BlockState
 
         if (!clientPacket) {
             val edgeDataTag = CompoundTag()
-            edgeData.forEach { edgeDataTag.put(objectMapper.writeValueAsString(it.key), it.value) }
+            edgeData.forEach { edgeDataTag.put(edgePosToString(it.key), it.value) }
             tag.put("edgeData", edgeDataTag)
         }
 
@@ -167,6 +165,18 @@ class DuctBlockEntity(type: BlockEntityType<*>, pos: BlockPos, state: BlockState
         return super.createRenderBoundingBox().inflate(1.0/16.0)
     }
 
+
+    private fun edgePosToString(edgePos: EdgePos): String = "${edgePos.first} | ${edgePos.second}"
+
+    private fun stringToEdgePos(s: String): EdgePos {
+        val parts = s.split(" | ")
+        return EdgePos(parseDuctNodePos(parts[0]), parseDuctNodePos(parts[1]))
+    }
+
+    private fun parseDuctNodePos(s: String): DuctNodePos {
+        val parts = s.split(", ")
+        return DuctNodePos(parts[0].toDouble(), parts[1].toDouble(), parts[2].toDouble(), ResourceLocation(parts[3]))
+    }
 
     data class EdgePos(val first: DuctNodePos, val second: DuctNodePos)
 }
