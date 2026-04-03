@@ -22,18 +22,15 @@ import org.joml.Matrix4f
 import org.joml.Vector3d
 import org.valkyrienskies.clockwork.ClockworkMod
 import org.valkyrienskies.clockwork.ClockworkPartials
-import org.valkyrienskies.core.api.ships.ClientShip
-import org.valkyrienskies.mod.common.getShipManagingPos
 import org.valkyrienskies.clockwork.util.toJOMLD
+// VS2 removed: ClientShip, getShipManagingPos require VS2 runtime
 import kotlin.math.*
 import org.valkyrienskies.clockwork.util.*
-import org.valkyrienskies.core.api.util.GameTickOnly
 
 class ExtendonRenderer(context: BlockEntityRendererProvider.Context?) : SmartBlockEntityRenderer<ExtendonBlockEntity>(context) {
     override fun shouldRenderOffScreen(blockEntity: ExtendonBlockEntity) = true
     override fun shouldRender(blockEntity: ExtendonBlockEntity, cameraPos: Vec3): Boolean = true
 
-    @OptIn(GameTickOnly::class)
     override fun renderSafe(
         be: ExtendonBlockEntity,
         partialTicks: Float,
@@ -48,15 +45,12 @@ class ExtendonRenderer(context: BlockEntityRendererProvider.Context?) : SmartBlo
         var axis1 = CachedBuffers.partial(ClockworkPartials.EXTENDON_AXIS1,be.blockState)
 
         if (be.connectedBe != null) {
-            val thisShip = be.level!!.getShipManagingPos(be.blockPos) as ClientShip?
-            val thisPos = if (thisShip == null) be.blockPos.toJOMLD() + 0.5 else thisShip.renderTransform.shipToWorld.transformPosition(be.blockPos.toJOMLD() + 0.5)!!
-
-            val otherShip = be.level!!.getShipManagingPos(be.connectedBe!!.pos) as ClientShip?
-            val otherPos = if (otherShip == null)be.connectedBe!!.pos.toJOMLD() + 0.5 else otherShip.renderTransform.shipToWorld.transformPosition(be.connectedBe!!.pos.toJOMLD() + 0.5)!!
+            // VS2 removed: no ships; use direct block positions
+            val thisPos = be.blockPos.toJOMLD() + 0.5
+            val otherPos = be.connectedBe!!.pos.toJOMLD() + 0.5
 
             val direction = otherPos - thisPos
-
-            val angles = if (thisShip == null) getEulerAngles(direction) else getEulerAngles(thisShip.renderTransform.worldToShip.transformDirection(direction, Vector3d()))
+            val angles = getEulerAngles(direction)
 
             //Rotate Partials
             axis0 = axis0.rotateCentered(angles.second.toFloat(), Direction.UP)
@@ -65,14 +59,7 @@ class ExtendonRenderer(context: BlockEntityRendererProvider.Context?) : SmartBlo
             axis1 = axis1.rotateCentered(angles.first.toFloat(), Direction.WEST)
 
             if (be.main) {
-                val mainScale  = thisShip ?.transform?.scaling?.get(0) ?: 1.0
-                val otherScale = otherShip?.transform?.scaling?.get(0) ?: 1.0
-
-                val tubeRadiusMultiplier = if (otherScale < mainScale) (otherScale / mainScale).toFloat() else 1f
-                val tubeLengthMultiplier = (1.0 / mainScale).toFloat()
-                val tubeTextureMultiplier = if (otherScale > mainScale) 1f else (otherScale / mainScale).toFloat()
-
-                renderTubes(direction.length().toFloat() * tubeLengthMultiplier, ms, angles, be.blockPos, be.connectedBe!!.blockPos, tubeRadiusMultiplier, tubeTextureMultiplier, tubebuffer)
+                renderTubes(direction.length().toFloat(), ms, angles, be.blockPos, be.connectedBe!!.blockPos, 1f, 1f, tubebuffer)
             }
         }
         val vb = buffer.getBuffer(RenderType.cutout())

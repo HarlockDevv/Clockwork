@@ -23,7 +23,7 @@ import org.joml.Vector3f
 import org.valkyrienskies.clockwork.ClockworkPartials
 import org.valkyrienskies.clockwork.mixinduck.MixinPlayerDuck
 import org.valkyrienskies.clockwork.util.EaseHelper
-import org.valkyrienskies.mod.api.vsApi
+// VS2 removed: vsApi requires VS2 runtime
 import kotlin.math.cos
 import kotlin.math.min
 import kotlin.math.sin
@@ -43,7 +43,6 @@ open class GravitronItemRenderer : CustomRenderedItemModelRenderer() {
         light: Int,
         overlay: Int,
     ) {
-        vsApi
         val player = Minecraft.getInstance().player!!
         val partialTicks = AnimationTickHolder.getPartialTicks()
 

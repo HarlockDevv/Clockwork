@@ -8,10 +8,7 @@ import net.minecraft.data.models.blockstates.PropertyDispatch.QuadFunction
 import net.minecraft.world.phys.Vec3
 import org.valkyrienskies.clockwork.util.sound.SoundScape
 import org.valkyrienskies.core.api.ships.Ship
-import org.valkyrienskies.mod.common.getShipManagingPos
-import org.valkyrienskies.mod.common.toWorldCoordinates
-import org.valkyrienskies.clockwork.util.toJOMLD
-import org.valkyrienskies.mod.common.util.toMinecraft
+// VS2 removed: getShipManagingPos, toWorldCoordinates, toMinecraft require VS2 runtime
 import java.util.*
 import java.util.function.Consumer
 
@@ -102,12 +99,12 @@ object ClockworkSoundScapes {
 
     private fun addSound(group: AmbienceGroup, pos: BlockPos, pitch: Float) {
         val groupFromPitch = getGroupFromPitch(pitch)
-        val realPos = BlockPos.containing(Minecraft.getInstance().player?.level()?.toWorldCoordinates(pos.toJOMLD())?.toMinecraft() ?: Vec3.atLowerCornerOf(pos))
+        val realPos = BlockPos.containing(Vec3.atLowerCornerOf(pos))
         val set = counter.computeIfAbsent(group) { ag: AmbienceGroup -> IdentityHashMap() }
             .computeIfAbsent(groupFromPitch) { pg: PitchGroup? -> HashSet() }
         set.add(pos)
 
-        val ship = Minecraft.getInstance().level?.getShipManagingPos(pos)
+        val ship: Ship? = null // VS2 removed: no ships without VS2
 
         val pair: Pair<AmbienceGroup, PitchGroup> =
             Pair(group, groupFromPitch)
@@ -125,14 +122,13 @@ object ClockworkSoundScapes {
     }
 
     private fun outOfRange(pos: BlockPos): Boolean {
-        return !getCameraPos().closerThan(BlockPos.containing(Minecraft.getInstance().player?.level()?.toWorldCoordinates(pos.toJOMLD())?.toMinecraft() ?: Vec3.atLowerCornerOf(pos)), MAX_AMBIENT_SOURCE_DISTANCE.toDouble())
+        return !getCameraPos().closerThan(BlockPos.containing(Vec3.atLowerCornerOf(pos)), MAX_AMBIENT_SOURCE_DISTANCE.toDouble())
     }
 
     private fun getCameraPos(): BlockPos {
         val renderViewEntity = Minecraft.getInstance().cameraEntity
             ?: return BlockPos.ZERO
-        val playerLocation = renderViewEntity.level().toWorldCoordinates(renderViewEntity.blockPosition().toJOMLD());
-        return BlockPos.containing(playerLocation.toMinecraft())
+        return renderViewEntity.blockPosition()
     }
 
     fun getSoundCount(group: AmbienceGroup?, pitchGroup: PitchGroup?): Int {

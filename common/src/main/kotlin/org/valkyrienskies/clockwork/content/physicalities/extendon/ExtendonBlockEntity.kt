@@ -27,20 +27,17 @@ import org.valkyrienskies.clockwork.util.gtpa
 import org.valkyrienskies.clockwork.util.universal_joint.IUniversalJoint
 import org.valkyrienskies.clockwork.util.updateJoint
 import org.valkyrienskies.core.api.ships.properties.ShipId
-import org.valkyrienskies.core.api.world.properties.DimensionId
 import org.valkyrienskies.core.internal.joints.*
 import org.valkyrienskies.core.internal.joints.VSD6Joint.D6Axis
 import org.valkyrienskies.core.internal.joints.VSD6Joint.D6Motion
 import org.valkyrienskies.kelvin.api.*
 import org.valkyrienskies.kelvin.api.edges.PipeDuctEdge
 import org.valkyrienskies.kelvin.util.KelvinExtensions.toDuctNodePos
-import org.valkyrienskies.mod.common.getShipManagingPos
+// VS2 removed: getShipManagingPos requires VS2 runtime
 import org.valkyrienskies.clockwork.util.toJOMLD
 import java.util.EnumMap
 import org.valkyrienskies.kelvin.api.DuctNetwork.Companion.idealGasConstant
-import org.valkyrienskies.mod.api.vsApi
-import org.valkyrienskies.mod.common.ValkyrienSkiesMod
-import org.valkyrienskies.mod.common.dimensionId
+// VS2 removed: vsApi, ValkyrienSkiesMod, dimensionId require VS2 runtime
 import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.max
@@ -83,7 +80,7 @@ class ExtendonBlockEntity(type: BlockEntityType<*>?, pos: BlockPos, state: Block
 
         val previousDistance = distanceJoint!!.minDistance!!
 
-        val distance = max(1.5f,(gasToDistance(kelvin, getDuctNodePosition(), level!!.dimensionId) + gasToDistance(kelvin, connectedBe!!.getDuctNodePosition(), level!!.dimensionId)))
+        val distance = max(1.5f,(gasToDistance(kelvin, getDuctNodePosition(), null) + gasToDistance(kelvin, connectedBe!!.getDuctNodePosition(), null)))
 
         if (distance == previousDistance) return
         if (abs(distance - previousDistance) < 0.01f) return
@@ -161,59 +158,23 @@ class ExtendonBlockEntity(type: BlockEntityType<*>?, pos: BlockPos, state: Block
     }
 
     private fun createJoint() {
-        val level = level as ServerLevel
-
-        if (connectedBe == null) throw IllegalStateException("Null connected block entity")
-
-        val shipId0 = getShipID()
-        val shipId1 = connectedBe!!.getShipID()
-        val pos0 = blockPos.toJOMLD().add(0.5,0.5,0.5)
-        val pos1 = connectedBe!!.blockPos.toJOMLD().add(0.5,0.5,0.5)
-        val quater0 = getQuaterniond(level.getBlockState(blockPos).getValue(BlockStateProperties.FACING))
-        val quater1 = getQuaterniond(level.getBlockState(connectedBe!!.blockPos).getValue(BlockStateProperties.FACING))
-
-        distanceJoint = VSDistanceJoint(pose0 = VSJointPose(pos0, quater0), pose1 = VSJointPose(pos1, quater1) , shipId0 = shipId0, shipId1 = shipId1,
-            minDistance = 0.5f, maxDistance = 1000f, damping = 1000f )
-        level.gtpa.addJoint(distanceJoint!!) { distanceJointId = it }
-
-        val limit = VSD6Joint.LimitCone(Math.PI.toFloat()/4f, Math.PI.toFloat()/4f)
-        val motions = EnumMap<D6Axis, D6Motion>(D6Axis::class.java)
-
-        motions[D6Axis.X] = D6Motion.FREE
-        motions[D6Axis.Y] = D6Motion.FREE
-        motions[D6Axis.Z] = D6Motion.FREE
-        motions[D6Axis.TWIST] = D6Motion.LOCKED
-        motions[D6Axis.SWING1] = D6Motion.LIMITED
-        motions[D6Axis.SWING2] = D6Motion.LIMITED
-
-
-
-        sphericalJoint = VSD6Joint(pose0 = VSJointPose(pos0, quater0), pose1 = VSJointPose(pos1, quater1) , shipId0 = shipId0, shipId1 = shipId1, swingLimit = limit, motions = motions,  )
-        level.gtpa.addJoint(sphericalJoint!!) { sphericalJointId = it }
-
-        main = true
+        // VS2 removed: VSDistanceJoint/VSD6Joint/gtpa require VS2 physics runtime
+        main = false
     }
 
     private fun removeJoint() {
-        val level = level as ServerLevel
-
-        if (distanceJointId != null) level.gtpa.removeJoint(distanceJointId!!)
-        if (sphericalJointId != null) level.gtpa.removeJoint(sphericalJointId!!)
-
+        // VS2 removed: gtpa requires VS2 physics runtime
         distanceJoint = null
         distanceJointId = null
         sphericalJoint = null
         sphericalJointId = null
-
         main = false
     }
 
 
     fun getShipID(): ShipId? {
-        val ship = level.getShipManagingPos(blockPos)
-
-        if (ship == null) return -1L
-        else return ship.id
+        // VS2 removed: no ships without VS2; return sentinel -1L (world)
+        return -1L
     }
 
     override fun write(compound: CompoundTag, clientPacket: Boolean) {
@@ -262,7 +223,7 @@ class ExtendonBlockEntity(type: BlockEntityType<*>?, pos: BlockPos, state: Block
             // extendon specific: display current length
             val kelvin = if (Minecraft.getInstance().isLocalServer && Platform.isFabric()) ClockworkMod.getKelvin() else ClockworkModClient.getKelvin()
 
-            val currentLength = (max(1.5f,(gasToDistance(kelvin, getDuctNodePosition(), level!!.dimensionId) + gasToDistance(kelvin, connectedBe!!.getDuctNodePosition(), level!!.dimensionId))) * 10.0f).roundToInt() / 10.0f
+            val currentLength = (max(1.5f,(gasToDistance(kelvin, getDuctNodePosition(), null) + gasToDistance(kelvin, connectedBe!!.getDuctNodePosition(), null))) * 10.0f).roundToInt() / 10.0f
             tooltip.add(Component.translatable("vs_clockwork.extendon.current_length").append(Component.literal(currentLength.toString()).append("m").withStyle(ChatFormatting.YELLOW)))
 
 
@@ -354,17 +315,14 @@ class ExtendonBlockEntity(type: BlockEntityType<*>?, pos: BlockPos, state: Block
     companion object {
         // Calculates volume of cylinder via Ideal Gas Law, and then calculates said cylinder's height
         // Doesn't account for the elastic force of the hose, because doing so would require solving a cubic polynomial
-        fun gasToDistance(network: DuctNetwork<*>, pos: DuctNodePos, dimensionId: DimensionId): Float {
+        fun gasToDistance(network: DuctNetwork<*>, pos: DuctNodePos, dimensionId: Any? = null): Float {
             var moles = 0.0
-            for ((gas, mass) in network.getGasMassAt(pos)) moles +=  gas.massToMoles(mass)
-
-            val pressure = vsApi.getServerShipWorld(ValkyrienSkiesMod.currentServer)?.aerodynamicUtils?.getAirPressureForY(pos.y, dimensionId) ?: 1.0
+            for ((gas, mass) in network.getGasMassAt(pos)) moles += gas.massToMoles(mass)
+            // VS2 removed: vsApi.getServerShipWorld requires VS2; use standard sea-level pressure
+            val pressure = 101325.0
             val temperature = network.getTemperatureAt(pos)
-
-            val volume = temperature*idealGasConstant*moles/pressure
+            val volume = temperature * idealGasConstant * moles / pressure
             val height = 4 * volume / PI
-
-
             return height.toFloat()
         }
 

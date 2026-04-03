@@ -3,7 +3,6 @@ package org.valkyrienskies.clockwork.util
 import org.valkyrienskies.clockwork.content.logistics.gas.smart.ClockworkSmartEdge
 import org.valkyrienskies.clockwork.content.logistics.gas.filter.edges.ClockworkFilteredDuctEdge
 import org.valkyrienskies.clockwork.content.logistics.gas.oneway.ClockworkOnewayDuct
-import org.valkyrienskies.core.util.squared
 import org.valkyrienskies.kelvin.api.*
 import org.valkyrienskies.kelvin.api.edges.FilteredOneWayDuctEdge
 import org.valkyrienskies.kelvin.api.edges.OneWayDuctEdge
@@ -37,6 +36,6 @@ object DuctNetworkUtils {
     }
 
     fun DuctNodePos.magnitudeSqr(): Double {
-        return this.x.squared() + this.y.squared() + this.z.squared()
+        return this.x * this.x + this.y * this.y + this.z * this.z
     }
 }

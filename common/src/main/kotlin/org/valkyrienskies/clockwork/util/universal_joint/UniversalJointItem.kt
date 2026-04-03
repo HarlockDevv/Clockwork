@@ -11,7 +11,8 @@ import net.minecraft.world.level.block.entity.BlockEntity
 import org.valkyrienskies.clockwork.ClockworkMod.MOD_ID
 import org.valkyrienskies.clockwork.ClockworkSounds
 import org.valkyrienskies.clockwork.content.kinetics.universal_shaft.UniversalShaftBlockEntity
-import org.valkyrienskies.mod.common.toWorldCoordinates
+import net.minecraft.world.phys.Vec3
+// VS2 removed: toWorldCoordinates requires VS2 runtime
 
 open class UniversalJointItem<T: IUniversalJoint>(properties: Properties) : Item(properties) {
     var firstSelect: T? = null
@@ -34,7 +35,7 @@ open class UniversalJointItem<T: IUniversalJoint>(properties: Properties) : Item
             context.player!!.displayClientMessage(Component.translatable("$MOD_ID.universal_shaft.connection_start"), true)
         }
         else {
-            val worldDistance = context.level.toWorldCoordinates(firstSelect!!.pos).distanceTo(context.level.toWorldCoordinates(tBe.pos))
+            val worldDistance = Vec3.atCenterOf(firstSelect!!.pos).distanceTo(Vec3.atCenterOf(tBe.pos))
             if (worldDistance > tBe.maxCreationDistance) {
                 context.player!!.displayClientMessage(Component.translatable("$MOD_ID.universal_shaft.connection_failed.too_far"), true)
                 firstSelect = null

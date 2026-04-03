@@ -16,7 +16,7 @@ import org.valkyrienskies.kelvin.KelvinMod
 import org.valkyrienskies.kelvin.api.DuctNodePos
 import org.valkyrienskies.kelvin.util.INodeBlock
 import org.valkyrienskies.kelvin.util.KelvinExtensions.toDuctNodePos
-import org.valkyrienskies.mod.common.toWorldCoordinates
+// VS2 removed: toWorldCoordinates requires VS2 runtime
 
 abstract class KNodeKineticBlockEntity(typeIn: BlockEntityType<*>, pos: BlockPos, state: BlockState) : KineticBlockEntity(typeIn, pos, state), IClockworkNodeBE {
 
@@ -44,7 +44,7 @@ abstract class KNodeKineticBlockEntity(typeIn: BlockEntityType<*>, pos: BlockPos
                 this.setChanged()
                 val tag = CompoundTag()
                 this.saveData(tag, this.getDuctNodePosition())
-                ClockworkPackets.sendToNear(this.level, BlockPos.containing(level.toWorldCoordinates(this.worldPosition)), 30,
+                ClockworkPackets.sendToNear(this.level, this.worldPosition, 30,
                     KNodeSyncPacket(this.getDuctNodePosition(), tag))
 //            }
         }
